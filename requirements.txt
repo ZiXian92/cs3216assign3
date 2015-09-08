@@ -9,6 +9,7 @@ Jinja2==2.8
 MarkupSafe==0.23
 python-memcached==1.57
 pytz==2015.4
+requests==2.7.0
 six==1.9.0
 SQLAlchemy==1.0.8
 Werkzeug==0.10.4
