@@ -2,4 +2,5 @@
 .idea/
 venv/
 app.db
-
+src/app/static/node_modules/
+*.DS_Store

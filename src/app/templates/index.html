@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
-<body>
+<body ng-app="tldr" ng-controller="mainController">
 <h1>It works!</h1>
-<img src="/static/NERV.jpg">
+<ul>
+	<li ng-repeat="i in [1, 2, 3, 4, 5]">Hello</li>
+</ul>
+<script src="/static/node_modules/angular/angular.js"></script>
+<script src="/static/app.js"></script>
 </body>
 </html>
