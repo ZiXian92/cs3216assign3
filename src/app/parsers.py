@@ -38,22 +38,39 @@ class LifeHackParser(BaseParser):
     SOURCE_ID = 'lifehack'
 
     @classmethod
-    def parse_post(cls, pid):
-        url = cls.get_url(pid)
+    def parse_post(cls, url):
         request = requests.get(url)
         if request.status_code != 200:
             raise ParserException()
         html = BeautifulSoup(request.text)
-        post_content = html.find_all('div', class_='post-content')[0].contents[1].contents
+        title = html.select('h1')[0].string.strip()
+        categories = map(lambda x: x.string.strip(), 
+            html.find('span', class_='category').select('a'))
+        post_content = html.find('div', class_='post-content')
+        if (not post_content):
+            raise ParserException()
+        
+        def parse_bullet(bullet):
+            if bullet.string is None:
+                return None
+            details = {'title': bullet.string.strip(), 'details': []}
+            element = bullet
+            while element.nextSibling:
+                element = element.nextSibling
+                if element.name == 'h2':
+                    break
+                if element.name == 'p' and element.string is not None:
+                    details['details'].append(element.string)
+            return details
+
         return {
-            'title': html.select('h1')[0].string.strip(),
+            'title': title,
             'image_url': '',
             'headlines': 'Dummy Headline',
-            'bullets': [{'title': 'Bullet One', 'details': 'Details One'},
-                        {'title': 'Bullet Two', 'details': 'Details Two'}],
+            'bullets': filter(None, map(parse_bullet, post_content.select('h2'))),
             'url': url,
-            'categories': ['Category One', 'Category Two'],
-            'id': pid,
+            'categories': categories,
+            'id': url,
             'source': cls.SOURCE_ID
         }
 
