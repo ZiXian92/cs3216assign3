@@ -16,4 +16,4 @@ class Post(Resource):
 def index():
     return render_template('index.html')
 
-api.add_resource(Post, '/<string:source_id>/<string:post_id>')
+api.add_resource(Post, '/post/<string:source_id>/<string:post_id>')

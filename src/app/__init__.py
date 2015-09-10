@@ -7,7 +7,7 @@ import memcache
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-api = Api(app)
+api = Api(app, prefix='/api/v1')
 
 mc = memcache.Client(['127.0.0.1:11211'])
 
