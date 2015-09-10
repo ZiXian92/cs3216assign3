@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -32,6 +34,16 @@ class BaseParser():
     @classmethod
     def get_url(cls, pid):
         return ''
+
+    @classmethod
+    def crawl(cls):
+        return [{
+                    'id': '0',
+                    'title': 'Dummy Title',
+                    'categories': ['Category One', 'Category Two'],
+                    'image': '',
+                    'create_time': datetime(1970, 1, 1)
+                }]
 
 
 class LifeHackParser(BaseParser):
@@ -81,6 +93,19 @@ class LifeHackParser(BaseParser):
     @classmethod
     def get_url(cls, pid):
         return 'http://www.lifehack.org/{}/'.format(pid)
+
+    @classmethod
+    def crawl(cls):
+        r = requests.get('http://www.lifehack.org/wp-admin/admin-ajax.php?action=get_news_feed', headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.22 Safari/537.36'})
+        d = r.json()['post'] or []
+        return [{
+                    'id': _['post_id'],
+                    'title': _['post_title'],
+                    'categories': [i for i in [_['main_cat_name'], _['sub_cat_name']] if i],
+                    'image': _['image'],
+                    'create_time': datetime.strptime(_['post_date'], '%Y-%m-%d %H:%M:%S')
+                } for _ in d]
 
 
 parsers = {_.SOURCE_ID: _ for _ in [BaseParser, LifeHackParser]}
