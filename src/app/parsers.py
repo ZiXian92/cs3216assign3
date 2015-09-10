@@ -80,3 +80,6 @@ class LifeHackParser(BaseParser):
     @classmethod
     def get_url(cls, pid):
         return 'http://www.lifehack.org/{}/'.format(pid)
+
+
+parsers = {_.SOURCE_ID: _ for _ in [BaseParser, LifeHackParser]}
