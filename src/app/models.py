@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from app import db
+from sqlalchemy.exc import IntegrityError
 
 
 category_association_table = db.Table('category_association', db.Model.metadata,
@@ -41,3 +42,11 @@ class Post(db.Model):
     title = db.Column(db.String)
     image = db.Column(db.String)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise

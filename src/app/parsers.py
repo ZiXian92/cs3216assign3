@@ -42,7 +42,8 @@ class BaseParser():
                     'title': 'Dummy Title',
                     'categories': ['Category One', 'Category Two'],
                     'image': '',
-                    'create_time': datetime(1970, 1, 1)
+                    'create_time': datetime(1970, 1, 1),
+                    'source': cls.SOURCE_ID
                 }]
 
 
@@ -104,7 +105,8 @@ class LifeHackParser(BaseParser):
                     'title': _['post_title'],
                     'categories': [i for i in [_['main_cat_name'], _['sub_cat_name']] if i],
                     'image': _['image'],
-                    'create_time': datetime.strptime(_['post_date'], '%Y-%m-%d %H:%M:%S')
+                    'create_time': datetime.strptime(_['post_date'], '%Y-%m-%d %H:%M:%S'),
+                    'source': cls.SOURCE_ID
                 } for _ in d]
 
 
