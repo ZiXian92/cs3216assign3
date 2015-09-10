@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app import db
 
 
@@ -38,3 +40,4 @@ class Post(db.Model):
     id = db.Column(db.String, primary_key=True)
     title = db.Column(db.String)
     image = db.Column(db.String)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
