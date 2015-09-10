@@ -44,30 +44,30 @@ class LifeHackParser(BaseParser):
         if request.status_code != 200:
             raise ParserException()
         html = BeautifulSoup(request.text)
-        title = html.select('h1')[0].string.strip()
-        categories = [x.string.strip() for x in html.find('span', class_='category').select('a')]
+        title = html.select('h1')[0].getText().strip()
+        categories = [x.getText().strip() for x in html.find('span', class_='category').select('a')]
         post_content = html.find('div', class_='post-content')
-        if (not post_content):
+        if not post_content:
             raise ParserException()
 
         def parse_bullet(bullet):
-            if bullet.string is None:
+            if bullet.getText() is None:
                 return None
-            details = {'title': bullet.string.strip(), 'details': []}
+            details = {'title': bullet.getText().strip(), 'details': []}
             element = bullet
             while element.nextSibling:
                 element = element.nextSibling
                 if element.name == 'h2':
                     break
-                if element.name == 'p' and element.string is not None:
-                    details['details'].append(element.string)
+                if element.name == 'p' and element.getText() is not None:
+                    details['details'].append(element.getText())
             return details
 
         return {
             'title': title,
             'image_url': '',
             'headlines': 'Dummy Headline',
-            'bullets': [parse_bullet(_) for _ in post_content.select('h2')],
+            'bullets': [parse_bullet(_) for _ in post_content.select('h2') if _],
             'url': url,
             'categories': categories,
             'id': uid,
