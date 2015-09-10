@@ -12,6 +12,8 @@ app.controller('mainController', function($scope){
 	$routeProvider.when('/', {
 		templateUrl: '/static/partials/home.html',
 		controller: 'homeController'
+	}).when('/about', {
+		templateUrl: '/static/partials/about.html'
 	}).otherwise({
 		redirectTo: '/'
 	});
