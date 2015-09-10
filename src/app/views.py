@@ -9,7 +9,7 @@ from flask_restful import Resource
 class Post(Resource):
     def get(self, source_id, post_id):
         parser = parsers[source_id]
-        return parser.parse_post(parser.get_url(post_id))
+        return parser.parse_post(post_id)
 
 
 @app.route('/', methods=['GET'])

@@ -38,7 +38,8 @@ class LifeHackParser(BaseParser):
     SOURCE_ID = 'lifehack'
 
     @classmethod
-    def parse_post(cls, url):
+    def parse_post(cls, uid):
+        url = cls.get_url(uid)
         request = requests.get(url)
         if request.status_code != 200:
             raise ParserException()
@@ -69,7 +70,7 @@ class LifeHackParser(BaseParser):
             'bullets': [parse_bullet(_) for _ in post_content.select('h2')],
             'url': url,
             'categories': categories,
-            'id': url,
+            'id': uid,
             'source': cls.SOURCE_ID
         }
 
