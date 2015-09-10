@@ -1,4 +1,4 @@
 #!/bin/bash
 
 pip3 install -r requirements.txt
-python3 run.py &
+python3 src/run.py &
