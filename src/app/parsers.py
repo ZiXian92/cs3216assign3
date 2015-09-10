@@ -44,12 +44,11 @@ class LifeHackParser(BaseParser):
             raise ParserException()
         html = BeautifulSoup(request.text)
         title = html.select('h1')[0].string.strip()
-        categories = map(lambda x: x.string.strip(), 
-            html.find('span', class_='category').select('a'))
+        categories = [x.string.strip() for x in html.find('span', class_='category').select('a')]
         post_content = html.find('div', class_='post-content')
         if (not post_content):
             raise ParserException()
-        
+
         def parse_bullet(bullet):
             if bullet.string is None:
                 return None
@@ -67,7 +66,7 @@ class LifeHackParser(BaseParser):
             'title': title,
             'image_url': '',
             'headlines': 'Dummy Headline',
-            'bullets': filter(None, map(parse_bullet, post_content.select('h2'))),
+            'bullets': [parse_bullet(_) for _ in post_content.select('h2')],
             'url': url,
             'categories': categories,
             'id': url,
@@ -80,4 +79,4 @@ class LifeHackParser(BaseParser):
 
     @classmethod
     def get_url(cls, pid):
-        return 'http://www.lifehack.org/%s/'.format(pid)
+        return 'http://www.lifehack.org/{}/'.format(pid)
