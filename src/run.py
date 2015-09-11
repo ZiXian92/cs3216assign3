@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from os import environ
 
-from app import app, db
+from app import app, db, models
 
 db.create_all()
+models.Category.create_categories()
 app.run(host='0.0.0.0', port=8001)

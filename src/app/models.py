@@ -31,8 +31,22 @@ class User(db.Model):
 class Category(db.Model):
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String, unique=True)
     posts = db.relationship("Post", secondary=post_category_association_table, backref="categories")
+
+    @classmethod
+    def create_categories(cls):
+        for category_name in ['Self-help', 'Money', 'Tech', 'Work', 'Lifestyle', 'Others']:
+            category = Category(name=category_name)
+            try:
+                db.session.add(category)
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
+    @classmethod
+    def get_all(cls):
+        return cls.query.all()
 
 
 class Post(db.Model):
