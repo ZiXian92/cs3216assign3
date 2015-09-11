@@ -11,6 +11,10 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'feedServic
 	});
 
 	// Methods
+	$scope.initCollapsible = function(){
+		$('.collapsible').collapsible();
+	};
+
 	$scope.getFeeds = function(){
 		return [{
 			image: 'http://lorempixel.com/580/250/nature/1',
@@ -50,17 +54,17 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'feedServic
 	});
 }]).controller('feedController', ['$scope', 'feedService', function($scope, feedService){
 	$scope.articles = feedService.articles;
-	$scope.$watchCollection('articles', function(newVal, oldVal, scope){
-		console.log($scope.articles);
-		$('.collapsible').collapsible({accordion: true});
-	});
-	// $(document).ready(function(){
-	// 	$('.collapsible').collapsible({accordion: true});
-	// });
-	// $('.collapsible').collapsible({accordion: true});
 }]).factory('feedService', function(){
 	return {
 		articles: []
+	};
+}).directive('postRepeat', function(){
+	return function(scope, element, attrs){
+		scope.$watch(attrs.postRepeat, function(callback){
+			if(scope.$last){
+				eval(callback)();
+			}
+		});
 	};
 }).config(['$routeProvider', function($routeProvider){
 	$routeProvider.when('/', {
