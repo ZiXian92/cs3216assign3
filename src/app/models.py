@@ -3,15 +3,14 @@ from datetime import datetime
 from app import db
 from sqlalchemy.exc import IntegrityError
 
-
-category_association_table = db.Table('category_association', db.Model.metadata,
-                                      db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                                      db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
+post_like_table = db.Table('post_like', db.Model.metadata,
+                           db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                           db.Column('post_id', db.String, db.ForeignKey('posts.id'))
 )
 
-post_association_table = db.Table('post_association', db.Model.metadata,
-                                  db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                                  db.Column('post_id', db.String, db.ForeignKey('posts.id'))
+post_bookmark_table = db.Table('post_bookmark', db.Model.metadata,
+                               db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                               db.Column('post_id', db.String, db.ForeignKey('posts.id'))
 )
 
 post_category_association_table = db.Table('post_category_association', db.Model.metadata,
@@ -25,8 +24,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     display_name = db.Column(db.String)
-    categories = db.relationship("Category", secondary=category_association_table)
-    posts = db.relationship("Post", secondary=post_association_table)
+    like_articles = db.relationship("Post", secondary=post_like_table)
+    bookmark_articles = db.relationship("Post", secondary=post_bookmark_table)
 
 
 class Category(db.Model):
