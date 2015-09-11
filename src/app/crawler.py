@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 db.create_all()
+models.Category.create_categories()
 
 
 def main():
