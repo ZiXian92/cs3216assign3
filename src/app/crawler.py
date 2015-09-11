@@ -14,6 +14,8 @@ def main():
                                create_time=post['create_time'])
         try:
             new_post.insert()
+            category = models.Category.get_by_name(post['category'])
+            category.posts.append(new_post)
         except IntegrityError:
             pass
 

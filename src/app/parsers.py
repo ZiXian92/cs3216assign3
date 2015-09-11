@@ -102,7 +102,7 @@ class LifeHackParser(BaseParser):
             'headlines': parse_headlines(),
             'bullets': [parse_bullet(_) for _ in post_content.select('h2') if _],
             'url': url,
-            'categories': categories,
+            'category': cls.map_category(categories),
             'id': uid,
             'source': cls.SOURCE_ID
         }
@@ -123,11 +123,25 @@ class LifeHackParser(BaseParser):
         return [{
                     'id': _['post_id'],
                     'title': _['post_title'],
-                    'categories': [i for i in [_['main_cat_name'], _['sub_cat_name']] if i],
+                    'category': cls.map_category([i for i in [_['main_cat_name'], _['sub_cat_name']] if i]),
                     'image': _['image'],
                     'create_time': datetime.strptime(_['post_date'], '%Y-%m-%d %H:%M:%S'),
                     'source': cls.SOURCE_ID
                 } for _ in d]
+
+    @classmethod
+    def map_category(cls, categories):
+        for category in categories:
+            category = category.lower()
+            if category in ['self-help', 'communication', 'productivity']:
+                return 'Self-help'
+            if category in ['money']:
+                return 'Money'
+            if category in ['tech']:
+                return 'Tech'
+            if category in ['lifestyle']:
+                return 'Lifestyle'
+        return 'Others'
 
 
 parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}

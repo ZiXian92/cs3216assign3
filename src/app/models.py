@@ -48,6 +48,10 @@ class Category(db.Model):
     def get_all(cls):
         return cls.query.all()
 
+    @classmethod
+    def get_by_name(cls, name):
+        return cls.query.filter_by(name=name).first()
+
 
 class Post(db.Model):
     __tablename__ = 'posts'
