@@ -133,12 +133,12 @@ class LifeHackParser(BaseParser):
     def map_category(cls, categories):
         for category in categories:
             category = category.lower()
-            if category in ['self-help', 'communication', 'productivity']:
+            if category in ['communication', 'productivity']:
                 return 'Self-help'
-            if category in ['money']:
+            if category in ['money', 'work']:
                 return 'Money'
-            if category in ['tech']:
-                return 'Tech'
+            if category in ['technology']:
+                return 'Technology'
             if category in ['lifestyle']:
                 return 'Lifestyle'
         return 'Others'
