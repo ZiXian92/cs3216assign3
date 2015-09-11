@@ -58,15 +58,19 @@ class LifeHackParser(BaseParser):
             raise ParserException()
         html = BeautifulSoup(request.text)
         title = html.select('h1')[0].getText().strip()
-
-        image_tag = html.find('figure', class_='poster').find('img')
-        image_str = image_tag['data-bttrlazyloading-md']
-        image_url = image_str[image_str.find('http'):image_str.find('.jpg') + 4].replace('\\', '')
-
         categories = [x.getText().strip() for x in html.find('span', class_='category').select('a')]
         post_content = html.find('div', class_='post-content')
         if not post_content:
             raise ParserException()
+
+        def parse_image_url():
+            image_tag = html.find('figure', class_='poster').find('img')
+            image_str = image_tag['data-bttrlazyloading-md']
+            for extension in ['jpg', 'png']:
+                end_index = image_str.find('.' + extension)
+                if end_index >= 0:
+                    return image_str[image_str.find('http'):end_index + 4].replace('\\', '')
+            return None
 
         def parse_headlines():
             element = post_content.findChild().findChild()
@@ -94,7 +98,7 @@ class LifeHackParser(BaseParser):
 
         return {
             'title': title,
-            'image_url': image_url,
+            'image_url': parse_image_url(),
             'headlines': parse_headlines(),
             'bullets': [parse_bullet(_) for _ in post_content.select('h2') if _],
             'url': url,
