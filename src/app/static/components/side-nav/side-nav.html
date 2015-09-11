@@ -1,8 +1,8 @@
 <md-sidenav class="md-sidenav-left md-whiteframe-z2 side-nav" md-component-id="side-bar">
 	<md-menu-content class="sidenav-menu">
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('about')" ng-class="{'md-focused': page==='about'}"><a href="#/about"><i class="material-icons left sidenav-icon">info</i>About tl;dr</a></md-button>
-		</md-menu-item>
+		<!-- <md-menu-item>
+			<md-button ng-click="onMenuSelect('profile')" ng-class="{'md-focused': page==='profile'}"><a href="#/"><i class="material-icons left sidenav-icon">person</i>Profile</a></md-button>
+		</md-menu-item> -->
 		<md-menu-item>
 			<md-button ng-click="onMenuSelect('latest')" ng-class="{'md-focused': page==='latest'}"><a href="#/feed"><i class="material-icons left sidenav-icon">new_releases</i>Latest Articles</a></md-button>
 		</md-menu-item>
@@ -10,18 +10,22 @@
 			<md-button ng-click="onMenuSelect('popular')" ng-class="{'md-focused': page==='popular'}"><a href="#/"><i class="material-icons left sidenav-icon">trending_up</i>Popular Articles</a></md-button>
 		</md-menu-item>
 		<md-menu-item>
-			<md-button ng-click="onMenuSelect('productivity')" ng-class="{'md-focused': page==='productivity'}"><a href="#/"><i class="material-icons left sidenav-icon">build</i>Productivity</a></md-button>
+			<md-button ng-click="onMenuSelect('money')" ng-class="{'md-focused': page==='money'}"><a href="#/"><i class="material-icons left sidenav-icon">attach_money</i>Money</a></md-button>
 		</md-menu-item>
 		<md-menu-item>
-			<md-button ng-click="onMenuSelect('business')" ng-class="{'md-focused': page==='business'}"><a href="#/"><i class="material-icons left sidenav-icon">work</i>Business</a></md-button>
+			<md-button ng-click="onMenuSelect('technology')" ng-class="{'md-focused': page==='technology'}"><a href="#/"><i class="material-icons left sidenav-icon">devices</i>Technology</a></md-button>
+		</md-menu-item>
+		<md-menu-item>
+			<md-button ng-click="onMenuSelect('work')" ng-class="{'md-focused': page==='work'}"><a href="#/"><i class="material-icons left sidenav-icon">work</i>Work</a></md-button>
+		</md-menu-item>
+		<md-menu-item>
+			<md-button ng-click="onMenuSelect('lifestyle')" ng-class="{'md-focused': page==='lifestyle'}"><a href="#/"><i class="material-icons left sidenav-icon">mood</i>Lifestyle</a></md-button>
 		</md-menu-item>
 		<md-menu-item>
 			<md-button ng-click="onMenuSelect('self-help')" ng-class="{'md-focused': page==='self-help'}"><a href="#/"><i class="material-icons left sidenav-icon">people</i>Self-help</a></md-button>
 		</md-menu-item>
 		<md-menu-item>
-			<md-button ng-click="onMenuSelect('settings')" ng-class="{'md-focused': page==='settings'}">
-				<a href="#"><i class="material-icons left sidenav-icon">settings</i>Settings</a>
-			</md-button>
+			<md-button ng-click="onMenuSelect('about')" ng-class="{'md-focused': page==='about'}"><a href="#/about"><i class="material-icons left sidenav-icon">info</i>About tl;dr</a></md-button>
 		</md-menu-item>
 	</md-menu-content>
 </md-sidenav>
