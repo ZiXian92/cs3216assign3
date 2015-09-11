@@ -52,6 +52,13 @@ class Category(db.Model):
     def get_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get(id)
+
+    def get_paginated_articles(self, offset, limit):
+        return self.posts[offset:offset + limit]
+
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -67,3 +74,11 @@ class Post(db.Model):
         except IntegrityError:
             db.session.rollback()
             raise
+
+    def to_dict(self):
+        return {'title': self.title, 'source': self.id.split('/')[0], 'article_id': self.id.split('/')[1],
+                'image': self.image, 'time': self.create_time.isoformat(), 'categories': self.categories[0].name}
+
+    @classmethod
+    def get_paginated(cls, offset, limit):
+        return cls.query.order_by('create_time DESC').limit(limit).offset(offset).all()
