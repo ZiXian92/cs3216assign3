@@ -17,6 +17,7 @@ def main():
             new_post.insert()
             category = models.Category.get_by_name(post['category'])
             category.posts.append(new_post)
+            db.session.commit()
         except IntegrityError:
             pass
 
