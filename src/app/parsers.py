@@ -22,7 +22,7 @@ class BaseParser():
             'bullets': [{'title': 'Bullet One', 'details': 'Details One'},
                         {'title': 'Bullet Two', 'details': 'Details Two'}],
             'url': cls.get_url(pid),
-            'categories': ['Category One', 'Category Two'],
+            'category': cls.map_category(['Category One', 'Category Two']),
             'id': pid,
             'source': cls.SOURCE_ID
         }
@@ -40,11 +40,15 @@ class BaseParser():
         return [{
                     'id': '0',
                     'title': 'Dummy Title',
-                    'categories': ['Category One', 'Category Two'],
+                    'category': cls.map_category(['Category One', 'Category Two']),
                     'image': '',
                     'create_time': datetime(1970, 1, 1),
                     'source': cls.SOURCE_ID
                 }]
+
+    @classmethod
+    def map_category(cls, categories):
+        return 'Others'
 
 
 class LifeHackParser(BaseParser):
