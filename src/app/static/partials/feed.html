@@ -1,0 +1,17 @@
+<div class="row" ng-repeat="article in articles">
+	<div class="col s12">
+		<div class="card">
+			<div class="card-image">
+				<img ng-src="{{article.image}}">
+				<span class="card-title">{{article.title}}</span>
+			</div>
+			<ul class="collapsible" data-accordion="true" watch>
+				<li ng-repeat="point in article.points">
+					<div class="collapsible-header">{{point.header}}</div>
+					<div class="collapsible-body"><p>{{point.content}}</p></div>
+				</li>
+				<li class="collapsible-header">Source: <a ng-href="{{article.link}}">{{article.link}}</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
