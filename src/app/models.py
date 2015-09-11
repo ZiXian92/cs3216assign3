@@ -77,7 +77,7 @@ class Post(db.Model):
 
     def to_dict(self):
         return {'title': self.title, 'source': self.id.split('/')[0], 'article_id': self.id.split('/')[1],
-                'image': self.image, 'time': self.create_time.isoformat(), 'categories': self.categories[0].name}
+                'image': self.image, 'time': self.create_time.isoformat(), 'category': self.categories[0].name}
 
     @classmethod
     def get_paginated(cls, offset, limit):
