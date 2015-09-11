@@ -130,4 +130,4 @@ class LifeHackParser(BaseParser):
                 } for _ in d]
 
 
-parsers = {_.SOURCE_ID: _ for _ in [BaseParser, LifeHackParser]}
+parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}
