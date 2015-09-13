@@ -10,7 +10,7 @@
 				<li class="collapsible-header">Source: <a ng-href="{{article.info.url}}">{{article.source}}</a></li>
 				<li ng-repeat="point in article.info.bullets">
 					<div class="collapsible-header">{{point.title}}</div>
-					<div class="collapsible-body"><p>{{point.details}}</p></div>
+					<div class="collapsible-body"><p>{{point.details[0]}}</p></div>
 				</li>
 			</ul>
 		</div>
