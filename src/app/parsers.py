@@ -172,11 +172,27 @@ class MarcAndAngelParser(BaseParser):
                     return image_url[:end_index + len(extension) + 1]
             return None
 
+        def parse_bullets():
+            h3_elements = content.select('h3')
+            bullets = []
+            for h3_element in h3_elements:
+                bullet = {'title': h3_element.getText(), 'details': []}
+                if bullet['title'] and bullet['title'][0].isdigit():
+                    bullets.append(bullet)
+                    element = h3_element
+                    while element.nextSibling:
+                        element = element.nextSibling
+                        if element.name == 'h3':
+                            break
+                        if element.name == 'p' and element.getText():
+                            bullet['details'].append(element.getText().strip())
+            return bullets
+
         return {
             'title': title,
             'image_url': parse_image_url(),
             'headlines': [],
-            'bullets': [],
+            'bullets': parse_bullets(),
             'url': url,
             'source': cls.SOURCE_ID
         }
