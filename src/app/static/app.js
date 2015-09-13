@@ -25,7 +25,14 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		pageNum = pageNum ? pageNum : 1;
 		articleService.getAllArticles({category: categoryId, page: pageNum}).$promise.then(function(articles){
 			articles.forEach(function(article){
-				article.info = articleService.getArticleContent({source: article.source, article: article.article_id});
+				articleService.getArticleContent({source: article.source, article: article.article_id}).$promise.then(function(info){
+					info.bullets.forEach(function(bullet){
+						bullet.details = bullet.details.filter(function(para){
+							return para!=='';
+						});
+					});
+					article.info = info;
+				});
 			});
 			feedService.articles = articles;
 		});
