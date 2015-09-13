@@ -90,7 +90,7 @@ class LifeHackParser(BaseParser):
             return [_ for _ in headlines if _]
 
         def parse_bullet(bullet):
-            if not bullet.getText()
+            if not bullet.getText():
                 return None
             details = {'title': bullet.getText().strip(), 'details': []}
             element = bullet
