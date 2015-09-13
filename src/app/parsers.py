@@ -151,4 +151,35 @@ class LifeHackParser(BaseParser):
         return 'Others'
 
 
+class MarcAndAngelParser(BaseParser):
+    SOURCE_ID = 'marcandangle'
+
+    @classmethod
+    def parse_post(cls, url):
+        request = requests.get(url)
+        if request.status_code != 200:
+            raise ParserException()
+        html = BeautifulSoup(request.text)
+        title = html.find('h1', class_='entry-title').getText().strip()
+        content = html.find('div', class_='entry-content')
+
+        def parse_image_url():
+            image = content.find('img')
+            image_url = image['src']
+            for extension in ['jpg', 'png']:
+                end_index = image_url.find('.' + extension)
+                if end_index >= 0:
+                    return image_url[:end_index + len(extension) + 1]
+            return None
+
+        return {
+            'title': title,
+            'image_url': parse_image_url(),
+            'headlines': [],
+            'bullets': [],
+            'url': url,
+            'source': cls.SOURCE_ID
+        }
+
+
 parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}
