@@ -26,10 +26,14 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		articleService.getAllArticles({category: categoryId, page: pageNum}).$promise.then(function(articles){
 			articles.forEach(function(article){
 				articleService.getArticleContent({source: article.source, article: article.article_id}).$promise.then(function(info){
-					info.bullets.forEach(function(bullet){
-						bullet.details = bullet.details.filter(function(para){
-							return para!=='';
-						});
+					info.bullets = info.bullets.filter(function(bullet){
+						if(bullet.title!==''){
+							bullet.details = bullet.details.filter(function(para){
+								return para!=='';
+							});
+							return true;
+						}
+						return false;
 					});
 					article.info = info;
 				});

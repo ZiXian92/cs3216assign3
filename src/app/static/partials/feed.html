@@ -6,11 +6,13 @@
 				<img ng-src="{{article.image}}">
 				<span class="card-title">{{article.title}}</span>
 			</div>
+			<p class="flow-text article-desc">
+				Category: {{article.category}}<br>
+				Source: <a ng-href="{{article.info.url}}">{{article.source}}</a>
+			</p>
 			<ul class="collapsible" data-accordion="true" watch>
-				<li class="collapsible-header">Category: {{article.category}}</li>
-				<li class="collapsible-header">Source: <a ng-href="{{article.info.url}}">{{article.source}}</a></li>
 				<li ng-repeat="point in article.info.bullets" post-repeat="initCollapsible">
-					<div class="collapsible-header">{{point.title}}</div>
+					<div class="collapsible-header" style="text-overflow: ellipsis">{{point.title}}</div>
 					<div class="collapsible-body"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
 				</li>
 			</ul>
@@ -18,3 +20,4 @@
 	</div>
 </div>
 </div>
+<link rel="stylesheet" href="/static/css/feed.css">
