@@ -68,12 +68,14 @@ class LifeHackParser(BaseParser):
             raise ParserException()
 
         def parse_image_url():
-            image_tag = html.find('figure', class_='poster').find('img')
-            image_str = image_tag['data-bttrlazyloading-md']
-            for extension in ['jpg', 'png']:
-                end_index = image_str.find('.' + extension)
-                if end_index >= 0:
-                    return image_str[image_str.find('http'):end_index + 4].replace('\\', '')
+            poster = html.find('figure', class_='poster')
+            if poster:
+                image_tag = poster.find('img')
+                image_str = image_tag['data-bttrlazyloading-md']
+                for extension in ['jpg', 'png']:
+                    end_index = image_str.find('.' + extension)
+                    if end_index >= 0:
+                        return image_str[image_str.find('http'):end_index + 4].replace('\\', '')
             return None
 
         def parse_headlines():
@@ -85,7 +87,7 @@ class LifeHackParser(BaseParser):
                 if element.name == 'h2' or not element.nextSibling:
                     break
                 element = element.nextSibling
-            return headlines
+            return [_ for _ in headlines if _]
 
         def parse_bullet(bullet):
             if bullet.getText() is None:
