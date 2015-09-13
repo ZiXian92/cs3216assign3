@@ -100,6 +100,7 @@ class LifeHackParser(BaseParser):
                     break
                 if element.name == 'p' and element.getText() is not None:
                     details['details'].append(element.getText())
+            details['details'] = [_ for _ in details['details'] if _]
             return details
 
         return {
