@@ -1,5 +1,5 @@
 <div class="container">
-<div class="row" ng-repeat="article in articles" post-repeat="initCollapsible">
+<div class="row" ng-repeat="article in articles">
 	<div class="col s12">
 		<div class="card">
 			<div class="card-image">
@@ -9,7 +9,7 @@
 			<ul class="collapsible" data-accordion="true" watch>
 				<li class="collapsible-header">Category: {{article.category}}</li>
 				<li class="collapsible-header">Source: <a ng-href="{{article.info.url}}">{{article.source}}</a></li>
-				<li ng-repeat="point in article.info.bullets">
+				<li ng-repeat="point in article.info.bullets" post-repeat="initCollapsible">
 					<div class="collapsible-header">{{point.title}}</div>
 					<div class="collapsible-body"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
 				</li>
