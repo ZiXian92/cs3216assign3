@@ -172,6 +172,17 @@ class MarcAndAngelParser(BaseParser):
                     return image_url[:end_index + len(extension) + 1]
             return None
 
+        def parse_headlines():
+            element = content.findChild()
+            headlines = []
+            while True:
+                if element.name == 'h3':
+                    break
+                if element.name == 'p' and element.getText():
+                    headlines.append(element.getText().strip()) 
+                element = element.nextSibling
+            return headlines
+
         def parse_bullets():
             h3_elements = content.select('h3')
             bullets = []
@@ -191,7 +202,7 @@ class MarcAndAngelParser(BaseParser):
         return {
             'title': title,
             'image_url': parse_image_url(),
-            'headlines': [],
+            'headlines': parse_headlines(),
             'bullets': parse_bullets(),
             'url': url,
             'source': cls.SOURCE_ID
