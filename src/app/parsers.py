@@ -90,7 +90,7 @@ class LifeHackParser(BaseParser):
             return [_ for _ in headlines if _]
 
         def parse_bullet(bullet):
-            if bullet.getText() is None:
+            if not bullet.getText()
                 return None
             details = {'title': bullet.getText().strip(), 'details': []}
             element = bullet
@@ -98,7 +98,7 @@ class LifeHackParser(BaseParser):
                 element = element.nextSibling
                 if element.name == 'h2':
                     break
-                if element.name == 'p' and element.getText() is not None:
+                if element.name == 'p' and element.getText():
                     details['details'].append(element.getText())
             details['details'] = [_ for _ in details['details'] if _]
             return details
@@ -107,7 +107,7 @@ class LifeHackParser(BaseParser):
             'title': title,
             'image_url': parse_image_url(),
             'headlines': parse_headlines(),
-            'bullets': [parse_bullet(_) for _ in post_content.select('h2') if _],
+            'bullets': [parse_bullet(_) for _ in post_content.select('h2') if _ and _.getText().strip()],
             'url': url,
             'category': cls.map_category(categories),
             'id': uid,
