@@ -7,12 +7,11 @@
 				<span class="card-title">{{article.title}}</span>
 			</div>
 			<ul class="collapsible" data-accordion="true" watch>
-				<li class="collapsible-header">Source: <a ng-href="{{article.link}}">{{article.link}}</a></li>
+				<li class="collapsible-header">Source: <a ng-href="{{article.info.url}}">{{article.source}}</a></li>
 				<li ng-repeat="point in article.points">
 					<div class="collapsible-header">{{point.header}}</div>
 					<div class="collapsible-body"><p>{{point.content}}</p></div>
 				</li>
-				
 			</ul>
 		</div>
 	</div>
