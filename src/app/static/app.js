@@ -1,11 +1,6 @@
 var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource']);
 
 app.controller('mainController', ['$scope', '$location', '$timeout', 'articleService', 'feedService', function($scope, $location, $timeout, articleService, feedService){
-	$scope.page = 'latest';
-	switch($location.path){
-		case '/': case '/feed': $scope.page = 'latest'; break;
-		default: break;
-	}
 
 	$scope.$watch('page', function(newVal, oldVal, scope){
 		switch(newVal){
@@ -14,13 +9,19 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		}
 	});
 
+	console.log($location.path());
+	switch($location.path()){
+		case '/': case '/feed': $scope.page = 'latest'; break;
+		default: break;
+	}
+
 	// Methods
 	$scope.initCollapsible = function(){
 		$('.collapsible').collapsible();
 	};
 
 	$scope.getArticles = function(categoryId, pageNum){
-		console.log(categoryId? true: false);
+		// console.log(categoryId? true: false); // Prints false when 0
 		categoryId = categoryId ? categoryId : 0;
 		pageNum = pageNum ? pageNum : 1;
 		articleService.getAllArticles({category: categoryId, page: pageNum}).$promise.then(function(articles){
@@ -41,32 +42,6 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 			feedService.articles = articles;
 		});
 	};
-
-	// $scope.getFeeds = function(){
-	// 	return [{
-	// 		image: 'http://lorempixel.com/580/250/nature/1',
-	// 		title: 'First Article',
-	// 		points: [{
-	// 			header: 'Point 1',
-	// 			content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-	// 		}, {
-	// 			header: 'Point 2',
-	// 			content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-	// 		}],
-	// 		link: 'http://lifehacker.com/'
-	// 	}, {
-	// 		image: 'http://lorempixel.com/580/250/nature/2',
-	// 		title: 'Second Article',
-	// 		points: [{
-	// 			header: 'Point 1',
-	// 			content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-	// 		}, {
-	// 			header: 'Point 2',
-	// 			content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-	// 		}],
-	// 		link: 'http://lifehacker.com/'
-	// 	}];
-	// };
 
 	// Event Handlers
 	$scope.$on('pageChange', function(event, newPage){
