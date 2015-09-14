@@ -6,7 +6,7 @@
 				<img ng-src="{{article.image}}">
 				<!-- <span class="card-title black-text article-title grey lighten-3"><b>{{article.title}}</b></span> -->
 			</div>
-			<h5 class="article-title">{{article.title}}</h5>
+			<a ng-href="{{article.info.url}}" class="black-text"><h5 class="article-title">{{article.title}}</h5></a>
 			<p class="flow-text article-desc">
 				Category: {{article.category}}<br>
 				Source: <a ng-href="{{article.info.url}}">{{article.source}}</a>
