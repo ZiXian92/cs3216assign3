@@ -11,5 +11,5 @@ def get_cached_post(source_id, post_id):
         return cached_data
     parser = parsers.parsers[source_id]
     data = parser.parse_post(post_id)
-    mc.set(post_key(source_id, post_id), data, time=3600)
+    mc.set(post_key(source_id, post_id), data, time=3600*24*3)
     return data
