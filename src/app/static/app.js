@@ -33,7 +33,7 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 	});
 }]).controller('feedController', ['$scope', 'feedService', function($scope, feedService){
 	$scope.articles = feedService.articles;
-    feedService.clearArticles;
+    feedService.clearArticles();
 	feedService.getArticles();
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
