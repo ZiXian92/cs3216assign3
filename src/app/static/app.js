@@ -33,6 +33,7 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 	});
 }]).controller('feedController', ['$scope', 'feedService', function($scope, feedService){
 	$scope.articles = feedService.articles;
+    feedService.clearArticles;
 	feedService.getArticles();
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
@@ -70,9 +71,13 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 			});
 		});
 	};
+    var clearArticles = function() {
+        articleList.length = 0;
+    };
 	return {
 		articles: articleList,
-		getArticles: getArticles
+		getArticles: getArticles,
+        clearArticles: clearArticles
 	};
 }]).directive('postRepeat', function(){
 	return function(scope, element, attrs){
