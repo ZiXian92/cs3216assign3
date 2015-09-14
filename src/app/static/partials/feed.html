@@ -13,7 +13,7 @@
 			</p>
 			<ul class="collapsible" data-accordion="true" watch>
 				<li ng-repeat="point in article.info.bullets" post-repeat="initCollapsible">
-					<div class="collapsible-header" style="text-overflow: ellipsis">{{point.title}}</div>
+					<div class="collapsible-header">{{point.title}}</div>
 					<div class="collapsible-body"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
 				</li>
 			</ul>
