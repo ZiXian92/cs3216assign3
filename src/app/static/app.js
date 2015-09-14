@@ -4,7 +4,7 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 
 	$scope.$watch('page', function(newVal, oldVal, scope){
 		switch(newVal){
-			case 'latest': $scope.getArticles(0); break;
+			//case 'latest': $scope.getArticles(0); break;
 			default: break;
 		}
 	});
@@ -20,29 +20,6 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		$('.collapsible').collapsible();
 	};
 
-	$scope.getArticles = function(categoryId, pageNum){
-		// console.log(categoryId? true: false); // Prints false when 0
-		categoryId = categoryId ? categoryId : 0;
-		pageNum = pageNum ? pageNum : 1;
-		articleService.getAllArticles({category: categoryId, page: pageNum}).$promise.then(function(articles){
-			articles.forEach(function(article){
-				articleService.getArticleContent({source: article.source, article: article.article_id}).$promise.then(function(info){
-					info.bullets = info.bullets.filter(function(bullet){
-						if(bullet.title!==''){
-							bullet.details = bullet.details.filter(function(para){
-								return para!=='';
-							});
-							return true;
-						}
-						return false;
-					});
-					article.info = info;
-				});
-			});
-			feedService.articles = articles;
-		});
-	};
-
 	// Event Handlers
 	$scope.$on('pageChange', function(event, newPage){
 		$scope.page = newPage;
@@ -56,6 +33,7 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 	});
 }]).controller('feedController', ['$scope', 'feedService', function($scope, feedService){
 	$scope.articles = feedService.articles;
+	feedService.getArticles();
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
 		getAllArticles: {
@@ -68,11 +46,35 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 			url: '/api/v1/article/:source/:article'
 		}
 	});
-}]).factory('feedService', function(){
-	return {
-		articles: []
+}]).factory('feedService', ['articleService', function(articleService){
+	var articleList = [];
+	var getArticles = function(categoryId, pageNum){
+		// console.log(categoryId? true: false); // Prints false when 0
+		categoryId = categoryId ? categoryId : 0;
+		pageNum = pageNum ? pageNum : 1;
+		articleService.getAllArticles({category: categoryId, page: pageNum}).$promise.then(function(articles){
+			articles.forEach(function(article){
+                articleList.push(article);
+				articleService.getArticleContent({source: article.source, article: article.article_id}).$promise.then(function(info){
+					info.bullets = info.bullets.filter(function(bullet){
+						if(bullet.title!==''){
+							bullet.details = bullet.details.filter(function(para){
+								return para!=='';
+							});
+							return true;
+						}
+						return false;
+					});
+					article.info = info;
+				});
+			});
+		});
 	};
-}).directive('postRepeat', function(){
+	return {
+		articles: articleList,
+		getArticles: getArticles
+	};
+}]).directive('postRepeat', function(){
 	return function(scope, element, attrs){
 		scope.$watch(attrs.postRepeat, function(callback){
 			if(scope.$last){

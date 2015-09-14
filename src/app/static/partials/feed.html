@@ -1,4 +1,7 @@
 <div class="container">
+<div layout="row" layout-align="space-around" ng-if="articles.length == 0">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+</div>
 <div class="row" ng-repeat="article in articles">
 	<div class="col s12">
 		<div class="card">
@@ -11,6 +14,9 @@
 				Category: {{article.category}}<br>
 				Source: <a ng-href="{{article.info.url}}">{{article.source}}</a>
 			</p>
+            <div layout="row" layout-align="space-around" ng-if="article.info == undefined">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
 			<ul class="collapsible" data-accordion="true" watch>
 				<li ng-repeat="point in article.info.bullets" post-repeat="initCollapsible">
 					<div class="collapsible-header">{{point.title}}</div>
