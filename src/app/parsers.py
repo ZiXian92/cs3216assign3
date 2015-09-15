@@ -214,5 +214,32 @@ class MarcAndAngelParser(BaseParser):
             'source': cls.SOURCE_ID
         }
 
+    @classmethod
+    def crawl(cls):
+        categories = {}
+        for category in ['aspirations', 'inspiration', 'productivity']:
+            base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
+            posts = []
+            page = 1
+
+            while True:
+                url = base_url.format(category, page)
+                request = requests.get(url)
+                if request.status_code != 200:
+                    break
+
+                html = BeautifulSoup(request.text)
+                entry_titles = html.findAll('h1', class_='entry-title')
+                for entry_title in entry_titles:
+                    link = entry_title.find('a')
+                    if link['href']:
+                        posts.append(link['href'])
+                        
+                page += 1
+
+            categories[category] = posts
+
+        return categories
+
 
 parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}
