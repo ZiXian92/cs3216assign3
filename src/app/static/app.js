@@ -1,8 +1,16 @@
 var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource']);
 
-app.controller('mainController', ['$scope', '$location', '$timeout', 'articleService', 'feedService', function($scope, $location, $timeout, articleService, feedService){
+app.controller('mainController', ['$scope', '$location', 'sidenavService', function($scope, $location, sidenavService){
 
 	// Methods
+	$scope.closeMenu = function(){
+		sidenavService.closeSidenav();
+	};
+
+	$scope.showMenu = function(){
+		sidenavService.openSidenav();
+	};
+
 	$scope.initCollapsible = function(){
 		$('.collapsible').collapsible();
 	};
