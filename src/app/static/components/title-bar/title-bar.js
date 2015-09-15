@@ -1,16 +1,16 @@
-var titleBar = angular.module('titleBar', ['ngMaterial']);
+var titleBar = angular.module('titleBar', ['ngMaterial', 'sideNav']);
 
-titleBar.directive('titleBar', function($mdSidenav, $mdUtil){
+titleBar.directive('titleBar', ['sidenavService', function(sidenavService){
 	return {
 		restrict: 'A',
 		templateUrl: '/static/components/title-bar/title-bar.html',
 		scope: true,
 		controller: function($scope, $mdUtil, $mdSidenav){
 			$scope.showSideBar = function(){
-				$mdSidenav('side-bar').toggle();
+				sidenavService.openSidenav();
 			};
 		}, link: function(scope, element, attrs){
 			
 		}
 	};
-});
+}]);
