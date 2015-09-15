@@ -2,19 +2,6 @@ var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource'
 
 app.controller('mainController', ['$scope', '$location', '$timeout', 'articleService', 'feedService', function($scope, $location, $timeout, articleService, feedService){
 
-	$scope.$watch('page', function(newVal, oldVal, scope){
-		switch(newVal){
-			//case 'latest': $scope.getArticles(0); break;
-			default: break;
-		}
-	});
-
-	console.log($location.path());
-	switch($location.path()){
-		case '/': case '/feed': $scope.page = 'latest'; break;
-		default: break;
-	}
-
 	// Methods
 	$scope.initCollapsible = function(){
 		$('.collapsible').collapsible();
@@ -31,7 +18,9 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', 'feedService', function($scope, feedService){
+}]).controller('feedController', ['$scope', '$location', 'feedService', function($scope, $location, feedService){
+	var category = $location.path().split('/')[2];
+	category = category ? Number(category) : 0;
 
 	/*
 	 * @param {Number=} category
@@ -43,7 +32,7 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		});
 	};
 
-	$scope.getArticles();
+	$scope.getArticles(category);
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
 		getAllArticles: {
@@ -94,6 +83,9 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 	}).when('/about', {
 		templateUrl: '/static/partials/about.html'
 	}).when('/feed', {
+		templateUrl: '/static/partials/feed.html',
+		controller: 'feedController'
+	}).when('/feed/:category', {
 		templateUrl: '/static/partials/feed.html',
 		controller: 'feedController'
 	}).otherwise({

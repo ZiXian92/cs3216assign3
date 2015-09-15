@@ -23,7 +23,7 @@
 					<div class="collapsible-body"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
 				</li>
 				<li ng-if="article.info.bullets.length===0">
-					{{article.info.headlines[0]}}
+					<p class="article-desc">{{article.info.headlines[0]}}</p>
 				</li>
 			</ul>
 		</div>
