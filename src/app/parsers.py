@@ -89,25 +89,31 @@ class LifeHackParser(BaseParser):
                 element = element.nextSibling
             return [_ for _ in headlines if _]
 
-        def parse_bullet(bullet):
-            if not bullet.getText():
-                return None
-            details = {'title': bullet.getText().strip(), 'details': []}
-            element = bullet
-            while element.nextSibling:
-                element = element.nextSibling
-                if element.name == 'h2':
-                    break
-                if element.name == 'p' and element.getText():
-                    details['details'].append(element.getText())
-            details['details'] = [_ for _ in details['details'] if _]
-            return details
+        def parse_bullets():
+            def parse_bullet(bullet, tag):
+                details = {'title': bullet.getText().strip(), 'details': []}
+                element = bullet
+                while element.nextSibling:
+                    element = element.nextSibling
+                    if element.name == tag:
+                        break
+                    if element.name == 'p' and element.getText():
+                        details['details'].append(element.getText())
+                details['details'] = [_ for _ in details['details'] if _]
+                return details
+
+            for bullet_tag in ['h2', 'h1', 'ol']:
+                bullet_elements = post_content.select(bullet_tag)
+                bullets = [parse_bullet(_, bullet_tag) for _ in bullet_elements if _ and _.getText()]
+                if len(bullets) > 0:
+                    return bullets
+            return []
 
         return {
             'title': title,
             'image_url': parse_image_url(),
             'headlines': parse_headlines(),
-            'bullets': [parse_bullet(_) for _ in post_content.select('h2') if _ and _.getText().strip()],
+            'bullets': parse_bullets(),
             'url': url,
             'category': cls.map_category(categories),
             'id': uid,
