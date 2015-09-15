@@ -32,9 +32,18 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		});
 	});
 }]).controller('feedController', ['$scope', 'feedService', function($scope, feedService){
-	$scope.articles = feedService.articles;
-    feedService.clearArticles();
-	feedService.getArticles();
+
+	/*
+	 * @param {Number=} category
+	 */
+	$scope.getArticles = function(category){
+		$scope.isLoading = true;
+		$scope.articles = feedService.getArticles(category, 0, function(){
+			$scope.isLoading = false;
+		});
+	};
+
+	$scope.getArticles();
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
 		getAllArticles: {
@@ -48,36 +57,27 @@ app.controller('mainController', ['$scope', '$location', '$timeout', 'articleSer
 		}
 	});
 }]).factory('feedService', ['articleService', function(articleService){
-	var articleList = [];
-	var getArticles = function(categoryId, pageNum){
+
+	/*
+	 * @param {Number} categoryId 0 for all categories
+	 * @param {Number} pageNum Starts from 1
+	 * @param {function()=} completion
+	 */
+	var getArticles = function(categoryId, pageNum, completion){
 		// console.log(categoryId? true: false); // Prints false when 0
 		categoryId = categoryId ? categoryId : 0;
 		pageNum = pageNum ? pageNum : 1;
-		articleService.getAllArticles({category: categoryId, page: pageNum}).$promise.then(function(articles){
+		return articleService.getAllArticles({category: categoryId, page: pageNum}, function(articles){
+			completion();
 			articles.forEach(function(article){
-                articleList.push(article);
-				articleService.getArticleContent({source: article.source, article: article.article_id}).$promise.then(function(info){
-					info.bullets = info.bullets.filter(function(bullet){
-						if(bullet.title!==''){
-							bullet.details = bullet.details.filter(function(para){
-								return para!=='';
-							});
-							return true;
-						}
-						return false;
-					});
-					article.info = info;
+				articleService.getArticleContent({source: article.source, article: article.article_id}, function(details){
+					article.info = details;
 				});
 			});
 		});
 	};
-    var clearArticles = function() {
-        articleList.length = 0;
-    };
 	return {
-		articles: articleList,
-		getArticles: getArticles,
-        clearArticles: clearArticles
+		getArticles: getArticles
 	};
 }]).directive('postRepeat', function(){
 	return function(scope, element, attrs){
