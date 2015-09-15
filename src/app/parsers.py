@@ -104,7 +104,7 @@ class LifeHackParser(BaseParser):
 
             for bullet_tag in ['h2', 'h1', 'ol']:
                 bullet_elements = post_content.select(bullet_tag)
-                bullets = [parse_bullet(_, bullet_tag) for _ in bullet_elements if _ and _.getText()]
+                bullets = [parse_bullet(_, bullet_tag) for _ in bullet_elements if _ and _.getText().strip()]
                 if len(bullets) > 0:
                     return bullets
             return []
