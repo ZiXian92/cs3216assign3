@@ -3,29 +3,14 @@
 		<!-- <md-menu-item>
 			<md-button ng-click="onMenuSelect('profile')" ng-class="{'md-focused': page==='profile'}"><a href="#/"><i class="material-icons left sidenav-icon">person</i>Profile</a></md-button>
 		</md-menu-item> -->
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('latest')" ng-class="{'md-focused': page==='latest'}"><a href="#/feed"><ng-md-icon icon="new_releases" class="sidenav-icon" size="36"></ng-md-icon>Latest Articles</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('popular')" ng-class="{'md-focused': page==='popular'}"><a href="#/feed"><ng-md-icon icon="trending_up" class="sidenav-icon" size="36"></ng-md-icon>Popular Articles</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('money')" ng-class="{'md-focused': page==='money'}"><a href="#/feed/2"><ng-md-icon icon="attach_money" class="sidenav-icon" size="36"></ng-md-icon>Money</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('technology')" ng-class="{'md-focused': page==='technology'}"><a href="#/feed/3"><ng-md-icon icon="devices" class="sidenav-icon" size="36"></ng-md-icon>Technology</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('work')" ng-class="{'md-focused': page==='work'}"><a href="#/feed/4"><ng-md-icon icon="work" class="sidenav-icon" size="36"></ng-md-icon>Work</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('lifestyle')" ng-class="{'md-focused': page==='lifestyle'}"><a href="#/feed/5"><ng-md-icon icon="mood" class="sidenav-icon" size="36"></ng-md-icon>Lifestyle</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('self-help')" ng-class="{'md-focused': page==='self-help'}"><a href="#/feed/1"><ng-md-icon icon="people" class="sidenav-icon" size="36"></ng-md-icon>Self-help</a></md-button>
-		</md-menu-item>
-		<md-menu-item>
-			<md-button ng-click="onMenuSelect('about')" ng-class="{'md-focused': page==='about'}"><a href="#/about"><ng-md-icon icon="info" class="sidenav-icon" size="36"></ng-md-icon>About tl;dr</a></md-button>
+		<md-menu-item ng-repeat="item in sideMenuItems">
+			<md-button ng-click="onMenuSelect(item.iid, item.view)"
+					   ng-class="{'md-focused': page===item.iid}">
+				<md-icon>
+					<ng-md-icon icon="{{ item.icon }}" class="sidenav-icon" size="24"></ng-md-icon>
+				</md-icon>
+				{{ item.title }}
+			</md-button>
 		</md-menu-item>
 	</md-menu-content>
 </md-sidenav>
