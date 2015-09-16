@@ -1,0 +1,45 @@
+CACHE MANIFEST
+# v0.1
+
+/static/app.js
+
+# Components
+/static/components/side-nav/side-nav.html
+/static/components/side-nav/side-nav.js
+/static/components/side-nav/side-nav.css
+/static/components/title-bar/title-bar.html
+/static/components/title-bar/title-bar.js
+/static/components/title-bar/title-bar.css
+
+# Partials
+/static/partials/about.html
+/static/partials/feed.html
+/static/partials/home.html
+
+# CSS
+/static/css/feed.css
+/static/css/home.css
+/static/css/materialize.min.css
+# /static/css/material_icon
+# /static/css/2fcrYFNaTjcS6g4U3t-Y5StnKWgpfO2iSkLzTz-AABg.ttf
+
+# JS
+/static/js/materialize.min.js
+
+# Images
+/static/images/1st-01.png
+/static/images/2nd-01.png
+/static/images/3rd-01.png
+/static/images/logo.png
+
+# Node modules
+/static/node_modules/angular-material/angular-material.min.css
+/static/node_modules/jquery/dist/jquery.min.js
+/static/node_modules/angular/angular.js
+/static/node_modules/angular-resource/angular-resource.min.js
+/static/node_modules/angular-route/angular-route.min.js
+/static/node_modules/angular-animate/angular-animate.min.js
+/static/node_modules/angular-aria/angular-aria.min.js
+/static/node_modules/angular-material/angular-material.min.js
+/static/node_modules/angular-material-icons/angular-material-icons.min.js
+

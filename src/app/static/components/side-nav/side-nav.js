@@ -1,4 +1,4 @@
-var sideNav = angular.module('sideNav', ['ngMaterial']);
+var sideNav = angular.module('sideNav', ['ngMaterial', 'ngMdIcons']);
 
 sideNav.directive('sideNav', ['sidenavService', function(sidenavService){
 	return {
