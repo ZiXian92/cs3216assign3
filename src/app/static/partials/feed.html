@@ -1,7 +1,8 @@
 <div class="container">
-<div layout="row" layout-align="space-around" ng-if="articles.length == 0">
+<div layout="row" layout-align="space-around" ng-if="isLoading">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
+<div ng-if="articles.length===0">No articles found for this category.</div>
 <div class="row" ng-repeat="article in articles">
 	<div class="col s12">
 		<div class="card">
