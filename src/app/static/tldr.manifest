@@ -43,3 +43,5 @@ CACHE MANIFEST
 /static/node_modules/angular-material/angular-material.min.js
 /static/node_modules/angular-material-icons/angular-material-icons.min.js
 
+NETWORK:
+*
