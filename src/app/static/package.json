@@ -17,6 +17,7 @@
     "angular-resource": "^1.4.5",
     "angular-route": "^1.4.5",
     "jquery": "^2.1.4",
-    "materialize-css": "^0.96.1"
+    "materialize-css": "^0.96.1",
+    "ng-infinite-scroll": "^1.2.0"
   }
 }
