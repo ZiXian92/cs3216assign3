@@ -1,4 +1,4 @@
-var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource']);
+var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons']);
 
 app.controller('mainController', ['$scope', '$location', 'sidenavService', function($scope, $location, sidenavService){
 
@@ -71,6 +71,8 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 					article.info = details;
 				});
 			});
+		}, function(){
+			completion();
 		});
 	};
 	return {

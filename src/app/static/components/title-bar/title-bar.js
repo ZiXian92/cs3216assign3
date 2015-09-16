@@ -1,4 +1,4 @@
-var titleBar = angular.module('titleBar', ['ngMaterial', 'sideNav']);
+var titleBar = angular.module('titleBar', ['ngMaterial', 'sideNav', 'ngMdIcons']);
 
 titleBar.directive('titleBar', ['sidenavService', function(sidenavService){
 	return {
