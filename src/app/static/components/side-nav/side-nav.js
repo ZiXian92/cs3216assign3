@@ -17,7 +17,6 @@ sideNav.directive('sideNav', ['$location', 'sidenavService', function($location,
 				sidenavService.closeSidenav();
 				$scope.$emit('pageChange', menu);
 				$location.path(view);
-				if (!$scope.$$phase) $scope.$apply();
 			};
 
 			$scope.sideMenuItems = [{
