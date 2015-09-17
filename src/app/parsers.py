@@ -168,6 +168,11 @@ class MarcAndAngelParser(BaseParser):
         html = BeautifulSoup(request.text)
         title = html.find('h1', class_='entry-title').getText().strip()
         content = html.find('div', class_='entry-content')
+        body_classes = html.find('body')['class']
+        pid = None
+        for body_class in body_classes:
+            if body_class.startswith('postid-'):
+                pid = body_class[7:]
 
         def parse_image_url():
             image = content.find('img')
@@ -210,9 +215,14 @@ class MarcAndAngelParser(BaseParser):
             'image_url': parse_image_url(),
             'headlines': parse_headlines(),
             'bullets': parse_bullets(),
+            'id': pid,
             'url': url,
             'source': cls.SOURCE_ID
         }
+
+    @classmethod
+    def get_url(cls, pid):
+        return 'http://www.marcandangel.com?p={}/'.format(pid)
 
     @classmethod
     def crawl(cls):
