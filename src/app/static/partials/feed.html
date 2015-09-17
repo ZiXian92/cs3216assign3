@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-immediate-check="false">
 <div layout="row" layout-align="space-around" ng-if="isLoading">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
@@ -8,7 +8,6 @@
 		<div class="card">
 			<div class="card-image">
 				<img ng-src="{{article.image}}">
-				<!-- <span class="card-title black-text article-title grey lighten-3"><b>{{article.title}}</b></span> -->
 			</div>
 			<a ng-href="{{article.info.url}}" class="black-text"><h5 class="article-title">{{article.title}}</h5></a>
 			<p class="flow-text article-desc">
