@@ -161,7 +161,7 @@ class MarcAndAngelParser(BaseParser):
     SOURCE_ID = 'marcandangle'
 
     @classmethod
-    def parse_post(cls, url):
+    def parse_post(cls, url, categories = []):
         request = requests.get(url)
         if request.status_code != 200:
             raise ParserException()
@@ -215,10 +215,21 @@ class MarcAndAngelParser(BaseParser):
             'image_url': parse_image_url(),
             'headlines': parse_headlines(),
             'bullets': parse_bullets(),
+            'category': cls.map_category(categories),
             'id': pid,
             'url': url,
             'source': cls.SOURCE_ID
         }
+
+    @classmethod
+    def map_category(cls, categories):
+        for category in categories:
+            category = category.lower()
+            if category in ['money', 'tech', 'life']:
+                return 'Lifestyle'
+            if category in ['career']:
+                return 'Work'
+        return 'Others'
 
     @classmethod
     def get_url(cls, pid):
@@ -227,7 +238,7 @@ class MarcAndAngelParser(BaseParser):
     @classmethod
     def crawl(cls):
         categories = {}
-        for category in ['aspirations', 'inspiration', 'productivity']:
+        for category in ['money', 'tech', 'life', 'career']:
             base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
             posts = []
             page = 1
@@ -248,6 +259,11 @@ class MarcAndAngelParser(BaseParser):
                 page += 1
 
             categories[category] = posts
+
+        # for category in categories:
+        #     posts = categories[category]
+        #     for post in posts:
+        #         cls.parse_post(post, [category])
 
         return categories
 
