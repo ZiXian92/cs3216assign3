@@ -50,6 +50,11 @@ sideNav.directive('sideNav', ['$location', 'sidenavService', function($location,
 				'view': '/feed/5',
 				'icon': 'mood'
 			}, {
+				'title': 'Self-help',
+				'iid': 'self-help',
+				'view': '/feed/1',
+				'icon': 'people'
+			}, {
 				'title': 'About tl;dr',
 				'iid': 'about',
 				'view': '/about',
