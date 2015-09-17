@@ -30,34 +30,46 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	var category = $location.path().split('/')[2];
 	category = category ? Number(category) : 0;
 	var lastPage = 1;
-	var feedStatus = {};
 
 	/*
 	 * @param {Number=} category
 	 */
 	$scope.getArticles = function(category){
 		$scope.isLoading = true;
-		$scope.articles = feedService.getArticles(category, 0, function(){
+		if(window.navigator.onLine){
+			$scope.articles = feedService.getArticles(category, 0, function(){
+				$scope.isLoading = false;
+			});
+		} else{
+			$scope.articles = JSON.parse(window.localStorage.getItem(String(category)));
 			$scope.isLoading = false;
-		});
+		}
 	};
 
 	$scope.fetchMoreArticles = function(){
 		if($scope.isLoading){
 			return;
 		}
-		console.log('fetching more articles');
 		$scope.isLoading = true;
-		var temp = feedService.getArticles(category, lastPage+1, function(){
-			lastPage = temp.length===0? lastPage: lastPage+1;
+		if(window.navigator.onLine){
+			var temp = feedService.getArticles(category, lastPage+1, function(){
+				lastPage = temp.length===0? lastPage: lastPage+1;
+				$scope.isLoading = false;
+				if(temp.length>0){
+					temp.forEach(function(article){
+						$scope.articles.push(article);
+					});
+				}
+			});
+		} else{
+			console.log('Retrieving from web storage');
 			$scope.isLoading = false;
-			if(temp.length>0){
-				temp.forEach(function(article){
-					$scope.articles.push(article);
-				});
-			}
-		});
+		}
 	};
+
+	$scope.$watch('articles', function(){
+		window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
+	}, true);
 
 	$scope.getArticles(category);
 }]).factory('articleService', ['$resource', function($resource){
