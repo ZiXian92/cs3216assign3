@@ -1,33 +1,31 @@
 <div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-immediate-check="false">
-<div layout="row" layout-align="space-around" ng-if="isLoading">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-</div>
-<div ng-if="articles.length===0">No articles found for this category.</div>
+
+<div ng-if="articles.length===0 && !isLoading">No articles found for this category.</div>
 <div class="row" ng-repeat="article in articles">
 	<div class="col s12">
 		<div class="card">
 			<div class="card-image">
 				<img ng-src="{{article.image}}">
 			</div>
-			<a ng-href="{{article.info.url}}" class="black-text"><h5 class="article-title">{{article.title}}</h5></a>
+			<a ng-href="{{article.url}}" class="black-text"><h5 class="article-title">{{article.title}}</h5></a>
 			<p class="flow-text article-desc">
 				Category: <a ng-href="{{getUrlForCategory(article.category)}}">{{article.category}}</a><br>
-				Source: <a ng-href="{{article.info.url}}">{{article.source}}</a>
+				Source: <a ng-href="{{article.url}}">{{article.source}}</a>
 			</p>
-            <div layout="row" layout-align="space-around" ng-if="article.info == undefined">
-                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-            </div>
 			<ul class="collapsible" data-accordion="true" watch>
-				<li ng-repeat="point in article.info.bullets" post-repeat="initCollapsible">
+				<li ng-repeat="point in article.bullets" post-repeat="initCollapsible">
 					<div class="collapsible-header">{{point.title}}</div>
 					<div class="collapsible-body"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
 				</li>
-				<li ng-if="article.info.bullets.length===0">
-					<p class="article-desc">{{article.info.headlines[0]}}</p>
+				<li ng-if="article.bullets.length===0">
+					<p class="article-desc">{{article.headlines[0]}}</p>
 				</li>
 			</ul>
 		</div>
 	</div>
+</div>
+<div layout="row" layout-align="space-around" ng-if="isLoading">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 </div>
 <link rel="stylesheet" href="/static/css/feed.css">

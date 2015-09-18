@@ -39,6 +39,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		if(window.navigator.onLine){
 			$scope.articles = feedService.getArticles(category, 0, function(){
 				$scope.isLoading = false;
+				window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 			});
 		} else{
 			$scope.articles = JSON.parse(window.localStorage.getItem(String(category)));
@@ -59,6 +60,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 					temp.forEach(function(article){
 						$scope.articles.push(article);
 					});
+					window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 				}
 			});
 		} else{
@@ -116,11 +118,6 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		pageNum = pageNum ? pageNum : 1;
 		return articleService.getAllArticles({category: categoryId, page: pageNum}, function(articles){
 			completion();
-			articles.forEach(function(article){
-				articleService.getArticleContent({source: article.source, article: article.article_id}, function(details){
-					article.info = details;
-				});
-			});
 		}, function(){
 			completion();
 		});
