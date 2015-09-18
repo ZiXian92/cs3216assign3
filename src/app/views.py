@@ -21,13 +21,16 @@ class Feed(Resource):
             page = int(request.args.get('page', 1))
         except ValueError:
             return 400
-        limit = 10
+        limit = 5
         offset = (page - 1) * limit
         if category_id == 0:
-            return [_.to_dict() for _ in models.Post.get_paginated(offset, limit)]
+            result = [_.to_dict() for _ in models.Post.get_paginated(offset, limit)]
         else:
             category = models.Category.get_by_id(category_id)
-            return [_.to_dict() for _ in category.get_paginated_articles(offset, limit)]
+            result = [_.to_dict() for _ in category.get_paginated_articles(offset, limit)]
+        for post in result:
+            post.update(utils.get_cached_post(post['source'], post['article_id']))
+        return result
 
 
 @app.route('/', methods=['GET'])
