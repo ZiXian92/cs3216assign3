@@ -26,7 +26,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', '$location', 'feedService', function($scope, $location, feedService){
+}]).controller('feedController', ['$scope', '$location', 'feedService', 'categoryMapper', function($scope, $location, feedService, categoryMapper){
 	var category = $location.path().split('/')[2];
 	category = category ? Number(category) : 0;
 	var lastPage = 1;
@@ -67,6 +67,10 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		}
 	};
 
+	$scope.getUrlForCategory = function(articleCategory){
+		return '#/feed/' + categoryMapper.getCategoryId(articleCategory);
+	};
+
 	$scope.$watch('articles', function(){
 		window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 	}, true);
@@ -84,7 +88,22 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			url: '/api/v1/article/:source/:article'
 		}
 	});
-}]).factory('feedService', ['articleService', function(articleService){
+}]).factory('categoryMapper', function(){
+	return {
+		getCategoryId: function(category){
+			console.log(category);
+			switch(category){
+				case 'Self-help': return '1';
+				case 'Money': return '2';
+				case 'Technology': return '3';
+				case 'Work': return '4';
+				case 'Lifestyle': return '5';
+				case 'Others': return '6';
+				default: return '0';
+			}
+		}
+	};
+}).factory('feedService', ['articleService', function(articleService){
 
 	/*
 	 * @param {Number} categoryId 0 for all categories

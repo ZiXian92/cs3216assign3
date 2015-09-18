@@ -11,7 +11,7 @@
 			</div>
 			<a ng-href="{{article.info.url}}" class="black-text"><h5 class="article-title">{{article.title}}</h5></a>
 			<p class="flow-text article-desc">
-				Category: {{article.category}}<br>
+				Category: <a ng-href="{{getUrlForCategory(article.category)}}">{{article.category}}</a><br>
 				Source: <a ng-href="{{article.info.url}}">{{article.source}}</a>
 			</p>
             <div layout="row" layout-align="space-around" ng-if="article.info == undefined">
