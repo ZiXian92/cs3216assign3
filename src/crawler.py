@@ -1,4 +1,4 @@
-from app import parsers, models, db
+from app import parsers, models, db, utils
 from sqlalchemy.exc import IntegrityError
 
 
@@ -17,6 +17,7 @@ def main():
             new_post.insert()
             category = models.Category.get_by_name(post['category'])
             category.posts.append(new_post)
+            utils.get_cached_post(post['source'], post['id'])
             db.session.commit()
         except IntegrityError:
             pass
