@@ -1,7 +1,6 @@
 from app import parsers, models, db, utils
 from sqlalchemy.exc import IntegrityError
 
-
 db.create_all()
 models.Category.create_categories()
 
@@ -17,10 +16,11 @@ def main():
             new_post.insert()
             category = models.Category.get_by_name(post['category'])
             category.posts.append(new_post)
-            utils.get_cached_post(post['source'], post['id'])
             db.session.commit()
         except IntegrityError:
             pass
+    for post in posts:
+        utils.get_cached_post(post['source'], post['id'])
 
 
 if __name__ == '__main__':
