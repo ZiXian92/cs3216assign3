@@ -1,6 +1,24 @@
-<nav>
+<!-- <nav>
 	<div class="nav-wrapper valign-wrapper grey lighten-3">
 	    <a href="#/" class="brand-logo valign center"><img src="/static/images/logo.png" maxwidth="20px" max-height="20px"></a>
-	    <md-button class="md-primary" ng-click="showSideBar()"><ng-md-icon icon="menu" style="fill: black" size="36"></ng-md-icon></md-button> 
+	    <md-button class="md-primary" ng-click="showSideBar()"><ng-md-icon icon="menu" style="fill: black" size="36"></ng-md-icon></md-button>
+	    <ul class="right">
+	    	<li>
+	    		<span class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></span>
+	    	</li>
+	    </ul>
 	</div>
-</nav>
+</nav> -->
+
+<md-toolbar class="grey lighten-3">
+	<div class="md-toolbar-tools">
+		<md-button class="md-icon-button" aria-label="menu" ng-click="showSideBar()">
+			<ng-md-icon icon="menu" style="fill: black" size="36"></ng-md-icon>
+		</md-button>
+		<span flex></span>
+			<img src="/static/images/logo.png" style="max-width: 50px; max-height: 50px;">
+			<h2 class="black-text">TL;DR</h2>
+		<span flex></span>
+		<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>
+	</div>
+</md-toolbar>
