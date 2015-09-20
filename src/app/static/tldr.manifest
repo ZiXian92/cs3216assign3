@@ -10,6 +10,8 @@ CACHE MANIFEST
 /static/components/title-bar/title-bar.html
 /static/components/title-bar/title-bar.js
 /static/components/title-bar/title-bar.css
+/static/components/facebook/facebook.js
+/static/components/facebook/fb-menu.html
 
 # Partials
 /static/partials/about.html
