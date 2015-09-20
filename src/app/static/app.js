@@ -102,12 +102,51 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	// }, true);
 
 	$scope.getArticles(category);
-}]).controller('profileController', ['$scope', '$location', 'fbService', function($scope, $location, fbService){
+}]).controller('profileController', ['$scope', '$location', 'bookmarkService', 'categoryMapper', 'fbService', function($scope, $location, bookmarkService, categoryMapper, fbService){
 	if(!fbService.isLoggedIn()){
 		$location.path('/');
 	}
 
+	var lastPage = 1;
+
+	$scope.isLoading = false;
 	$scope.user = fbService.getUser();
+
+	$scope.getBookmarks = function(){
+		$scope.isLoading = true;
+		bookmarkService.getBookmarks({}, function(response){
+			$scope.articles = response.data;
+			$scope.articles.forEach(function(article){
+				article.categoryUrl = $scope.getUrlForCategory(article.category);
+			});
+			$scope.isLoading = false;
+		});	
+	};
+
+	$scope.getMoreBookmarks = function(){
+		if($scope.isLoading){
+			return;
+		}
+		$scope.isLoading = true;
+		bookmarkService.getBookmarks({page: lastPage+1}, function(response){
+			var temp = response.data;
+			lastPage = temp.length>0 ? lastPage+1 : lastPage;
+			$scope.isLoading = false;
+			if(temp.length>0){
+				temp.forEach(function(article){
+					article.categoryUrl = $scope.getUrlForCategory(article.category);
+					$scope.articles.push(article);
+				});
+			}
+		});
+	};
+
+	$scope.getUrlForCategory = function(articleCategory){
+		return '#/feed/'+categoryMapper.getCategoryId(articleCategory);
+	};
+
+	$scope.getBookmarks();
+	
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
 		getAllArticles: {
@@ -123,7 +162,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		},
 		getBookmarks: {
 			method: 'GET',
-			isArray: true
+			isArray: false
 		},
 		removeBookmark: {
 			method: 'DELETE'
