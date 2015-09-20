@@ -8,22 +8,40 @@ fb.factory('fbService', ['$window', function($window){
 		FB.init({
 			appId: '1663895923894184',
 			cookie: true,
+			status: true,
 			xfbml: true,
 			version: 'v2.4'
 		});
-		// FB.getLoginStatus(function(response){
-		// 	if(response.status==='connected'){
-		// 		user = {
-		// 			token: response.authResponse.accessToken,
-		// 			id: response.authResponse.userID,
-		// 			image: 'http://graph.facebook.com/'+id+'/picture?type=square'
-		// 		};
-		// 		FB.api('/me', function(response){
-		// 			console.log(response);
-		// 			user.name = response.name;
-		// 		});
-		// 	}
-		// });
+
+		FB.Event.subscribe('auth.login', function(response){
+			if(response && response.status==='connected'){
+				user = {
+					token: response.authResponse.accessToken,
+					id: response.authResponse.userID
+				};
+				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square';
+				FB.api('/me', function(response){
+					user.name = response.name;
+				});
+			}
+		});
+
+		FB.Event.subscribe('auth.logout', function(response){
+			user = undefined;
+		});
+
+		FB.getLoginStatus(function(response){
+			if(response.status==='connected'){
+				user = {
+					token: response.authResponse.accessToken,
+					id: response.authResponse.userID
+				};
+				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square';
+				FB.api('/me', function(response){
+					user.name = response.name;
+				});
+			}
+		});
 	};
 	(function(d, s, id){
 		var js, fjs = d.getElementsByTagName(s)[0];
@@ -33,36 +51,36 @@ fb.factory('fbService', ['$window', function($window){
 	    fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
 	
+	// Method definitions
+	var getUser = function(){
+		return isLoggedIn() ? angular.extend({}, user) : user;
+	};
+
 	var isLoggedIn = function(){
 		return angular.isDefined(user);
 	};
-	var login = function(){
+	var login = function(callback){
 		FB.login(function(response){
-			if(response && response.status==='connected'){
-				user = {
-					token: response.authResponse.accessToken,
-					id: response.authResponse.userID
-				};
-				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square';
-				FB.api('/me', function(response){
-					user.name = response.name;
-					console.log(user);
-				});
-			}
+			callback();
 		});
 	};
-	var logout = function(){
-		FB.logout(function(){
-			user = undefined;
+	var logout = function(callback){
+		FB.logout(function(response){
+			callback();
+		});
+	};
+	var share = function(callback){
+		FB.ui({
+			method: 'share',
+			href: 'http://tldr.sshz.org'
 		}, function(response){
 			console.log(response);
+			callback();
 		});
-	};
-	var share = function(){
-		
 	};
 
 	return {
+		getUser: getUser,
 		isLoggedIn: isLoggedIn,
 		login: login,
 		logout: logout,
@@ -75,9 +93,21 @@ fb.factory('fbService', ['$window', function($window){
 		templateUrl: '/static/components/facebook/fb-menu.html',
 		controller: function($scope, fbService){
 			$scope.isLoggedIn = fbService.isLoggedIn;
-			$scope.login = fbService.login;
-			$scope.logout = fbService.logout;
-			$scope.share = fbService.share();
+			$scope.login = function(){
+				fbService.login(function(){
+					console.log(fbService.getUser());
+				});
+			};
+			$scope.logout = function(){
+				fbService.logout(function(){
+					console.log(fbService.getUser());
+				});
+			};
+			$scope.share = function(){
+				fbService.share(function(){
+					console.log('Thanks for spreading the word!');
+				});
+			};
 		}, link: function(scope, element, attrs){
 
 		}
