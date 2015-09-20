@@ -46,15 +46,17 @@ class Bookmarks(Resource):
     parser.add_argument('article_id')
 
     def get(self):
-        limit = 10
+        limit = 5
         if not g.user:
             abort(403)
         try:
             page = int(request.args.get('page', 1))
         except ValueError:
             abort(400)
-        return {'total': len(g.user.bookmark_articles),
-                'data': [_.to_dict() for _ in g.user.bookmark_articles[limit * (page - 1):limit * page]]}
+        data = [_.to_dict() for _ in g.user.bookmark_articles[limit * (page - 1):limit * page]]
+        for post in data:
+            post.update(utils.get_cached_post(post['source'], post['article_id']))
+        return {'total': len(g.user.bookmark_articles), 'data': data}
 
     def post(self):
         if not g.user:
