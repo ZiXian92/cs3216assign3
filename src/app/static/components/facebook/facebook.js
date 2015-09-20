@@ -74,7 +74,6 @@ fb.factory('fbService', ['$window', function($window){
 			method: 'share',
 			href: 'http://tldr.sshz.org'
 		}, function(response){
-			console.log(response);
 			callback();
 		});
 	};
@@ -95,12 +94,18 @@ fb.factory('fbService', ['$window', function($window){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
 				fbService.login(function(){
-					console.log(fbService.getUser());
+					$mdToast.show($mdToast.simple()
+						.content('Successfully logged in')
+						.position('top right')
+						.hideDelay(2000));
 				});
 			};
 			$scope.logout = function(){
 				fbService.logout(function(){
-					console.log(fbService.getUser());
+					$mdToast.show($mdToast.simple()
+						.content('Thank you for using TL;DR')
+						.position('top right')
+						.hideDelay(2000));
 				});
 			};
 			$scope.share = function(){
