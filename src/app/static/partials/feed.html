@@ -22,9 +22,9 @@
 				</li>
 			</ul>
 			<div class="row">
-				<md-button class="article-action-button"><md-icon>
-					<ng-md-icon icon="bookmark_outline" style="fill: black" size="24"></ng-md-icon>
-					<md-tooltip>Bookmark this article</md-tooltip>
+				<md-button class="article-action-button" ng-click="bookmarkArticle(article)"><md-icon>
+					<ng-md-icon icon="{{article.bookmarked ? 'bookmark' : 'bookmark_outline'}}" style="fill: black" size="24"></ng-md-icon>
+					<md-tooltip>{{ article.bookmarked ? 'Remove bookmark' : 'Bookmark this article'}}</md-tooltip>
 				</md-icon></md-button>
 				<md-button class="article-action-button"><md-icon>
 					<ng-md-icon icon="thumb_up" style="fill: black" size="24"></ng-md-icon>

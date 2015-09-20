@@ -23,10 +23,34 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', '$location', 'feedService', 'categoryMapper', function($scope, $location, feedService, categoryMapper){
+}]).controller('feedController', ['$scope', '$location', '$mdToast', 'feedService', 'bookmarkService', 'categoryMapper', function($scope, $location, $mdToast, feedService, bookmarkService, categoryMapper){
 	var category = $location.path().split('/')[2];
 	category = category ? Number(category) : 0;
 	var lastPage = 1;
+
+	/*
+	 * @param {Object) article
+	 */
+	$scope.bookmarkArticle = function(article){
+		bookmarkService.addBookmark({}, {
+			'article_id': article.article_id,
+			'source_id': article.source
+		}, function(){
+			article.bookmerked = true;
+		}, function(response){
+			if(response.status===403){
+				$mdToast.show($mdToast.simple()
+					.content('Please log in and try again')
+					.position('right')
+					.hideDelay(2000));
+			} else if(response.status===409){
+				$mdToast.show($mdToast.simple()
+					.content('Already bookmarked')
+					.position('right')
+					.hideDelay(2000));
+			}
+		});
+	};
 
 	/*
 	 * @param {Number=} category
@@ -90,10 +114,19 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			method: 'GET',
 			url: '/api/v1/feed/:category?page=:page',
 			isArray: true
+		}
+	});
+}]).factory('bookmarkService', ['$resource', function($resource){
+	return $resource('/api/v1/bookmark', {}, {
+		addBookmark: {
+			method: 'POST'
 		},
-		getArticleContent: {
+		getBookmarks: {
 			method: 'GET',
-			url: '/api/v1/article/:source/:article'
+			isArray: true
+		},
+		removeBookmark: {
+			method: 'DELETE'
 		}
 	});
 }]).factory('categoryMapper', function(){
