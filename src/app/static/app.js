@@ -20,6 +20,10 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		$scope.page = newPage;
 		console.log($scope.page);
 	});
+
+	// FB.api('/me', function(response){
+	// 	console.log(response);
+	// });
 }]).controller('homeController', ['$scope', function($scope){
 	$(document).ready(function(){
 		$('.slider').slider({
@@ -37,8 +41,11 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	$scope.getArticles = function(category){
 		$scope.isLoading = true;
 		if(window.navigator.onLine){
-			$scope.articles = feedService.getArticles(category, 0, function(){
+			$scope.articles = feedService.getArticles(category, 1, function(){
 				$scope.isLoading = false;
+				$scope.articles.forEach(function(article){
+					article.categoryUrl = $scope.getUrlForCategory(article.category);
+				});
 				window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 			});
 		} else{
@@ -73,9 +80,18 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		return '#/feed/' + categoryMapper.getCategoryId(articleCategory);
 	};
 
-	$scope.$watch('articles', function(){
-		window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
-	}, true);
+	$scope.shareArticle = function(articleUrl){
+		FB.ui({
+			method: 'share',
+			href: articleUrl
+		}, function(response){
+			
+		});
+	};	
+
+	// $scope.$watch('articles', function(){
+	// 	window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
+	// }, true);
 
 	$scope.getArticles(category);
 }]).factory('articleService', ['$resource', function($resource){
