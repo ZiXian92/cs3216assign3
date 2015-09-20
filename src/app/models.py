@@ -79,6 +79,10 @@ class Post(db.Model):
     image = db.Column(db.String)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
 
+    @classmethod
+    def get_by_id(cls, source_id, post_id):
+        return cls.query.get('{}/{}'.format(source_id, post_id))
+
     def insert(self):
         try:
             db.session.add(self)

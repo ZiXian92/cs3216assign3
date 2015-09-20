@@ -1,8 +1,8 @@
-from app import app, api, utils, models
+from app import app, api, utils, models, db
 
-from flask import render_template, request, session, g
+from flask import render_template, request, session, g, abort
 from facebook import get_user_from_cookie
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 
 FB_APP_ID = app.config['FB_APP_ID']
 FB_APP_SECRET = app.config['FB_APP_SECRET']
@@ -23,7 +23,7 @@ class Feed(Resource):
         try:
             page = int(request.args.get('page', 1))
         except ValueError:
-            return 400
+            abort(400)
         limit = 5
         offset = (page - 1) * limit
         if category_id == 0:
@@ -34,6 +34,41 @@ class Feed(Resource):
         for post in result:
             post.update(utils.get_cached_post(post['source'], post['article_id']))
         return result
+
+
+class Bookmarks(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('source_id')
+    parser.add_argument('article_id')
+
+    def get(self):
+        if not g.user:
+            abort(403)
+        return [_.to_dict() for _ in g.user.bookmark_articles]
+
+    def post(self):
+        if not g.user:
+            abort(403)
+        args = Bookmarks.parser.parse_args()
+        article = models.Post.get_by_id(args['source_id'], args['article_id'])
+        if not article:
+            abort(404)
+        if article in g.user.bookmark_articles:
+            abort(409)
+        g.user.bookmark_articles.append(article)
+        db.session.commit()
+        return args
+
+    def delete(self):
+        if not g.user:
+            abort(403)
+        args = Bookmarks.parser.parse_args()
+        article = models.Post.get_by_id(args['source_id'], args['article_id'])
+        if not article or article not in g.user.bookmark_articles:
+            abort(404)
+        g.user.bookmark_articles.remove(article)
+        db.session.commit()
+        return args
 
 
 @app.route('/', methods=['GET'])
@@ -63,5 +98,6 @@ def get_current_user():
 
 
 api.add_resource(Article, '/article/<string:source_id>/<string:post_id>')
+api.add_resource(Bookmarks, '/bookmark')
 api.add_resource(Categories, '/categories')
 api.add_resource(Feed, '/feed/<int:category_id>')
