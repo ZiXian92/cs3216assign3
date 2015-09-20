@@ -10,7 +10,9 @@ FB_APP_SECRET = app.config['FB_APP_SECRET']
 
 class Article(Resource):
     def get(self, source_id, post_id):
-        return utils.get_cached_post(source_id, post_id)
+        article = models.Post.get_by_id(source_id, post_id).to_dict()
+        article.update(utils.get_cached_post(source_id, post_id))
+        return article
 
 
 class Categories(Resource):

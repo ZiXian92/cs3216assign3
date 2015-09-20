@@ -24,8 +24,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     display_name = db.Column(db.String)
-    like_articles = db.relationship("Post", secondary=post_like_table)
-    bookmark_articles = db.relationship("Post", secondary=post_bookmark_table)
+    like_articles = db.relationship("Post", secondary=post_like_table, backref="likes")
+    bookmark_articles = db.relationship("Post", secondary=post_bookmark_table, backref="bookmarks")
 
     @classmethod
     def get_by_id(cls, id):
@@ -93,7 +93,8 @@ class Post(db.Model):
 
     def to_dict(self):
         return {'title': self.title, 'source': self.id.split('/')[0], 'article_id': self.id.split('/')[1],
-                'image': self.image, 'time': self.create_time.isoformat(), 'category': self.categories[0].name}
+                'image': self.image, 'time': self.create_time.isoformat(), 'category': self.categories[0].name,
+                'bookmarks': len(self.bookmarks), 'likes': len(self.likes)}
 
     @classmethod
     def get_paginated(cls, offset, limit):
