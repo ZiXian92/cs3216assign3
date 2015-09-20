@@ -21,9 +21,6 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		console.log($scope.page);
 	});
 
-	// FB.api('/me', function(response){
-	// 	console.log(response);
-	// });
 }]).controller('homeController', ['$scope', function($scope){
 	$(document).ready(function(){
 		$('.slider').slider({
@@ -85,7 +82,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			method: 'share',
 			href: articleUrl
 		}, function(response){
-			
+
 		});
 	};	
 
