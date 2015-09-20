@@ -1,16 +1,22 @@
-var sideNav = angular.module('sideNav', ['ngMaterial', 'ngMdIcons']);
+var sideNav = angular.module('sideNav', ['ngMaterial', 'ngMdIcons', 'facebook']);
 
-sideNav.directive('sideNav', ['$location', 'sidenavService', function($location, sidenavService){
+sideNav.directive('sideNav', ['$location', 'sidenavService', 'fbService', function($location, sidenavService, fbService){
 	return {
 		restrict: 'A',
 		templateUrl: '/static/components/side-nav/side-nav.html',
 		scope: {
 			page: '='
 		},
-		controller: function($scope, sidenavService){
+		controller: function($scope, sidenavService, fbService){
+
 			$scope.$watch('page', function(newVal, oldVal, scope){
 				console.log(newVal);
 			});
+			$scope.$watch(fbService.isLoggedIn, function(newVal, oldVal, scope){
+				scope.user = newVal ? fbService.getUser() : undefined;
+			});
+
+			$scope.isLoggedIn = fbService.isLoggedIn;
 
 			// Event Handlers
 			$scope.onMenuSelect = function(menu, view){

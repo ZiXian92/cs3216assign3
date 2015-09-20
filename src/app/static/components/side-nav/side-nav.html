@@ -1,8 +1,11 @@
 <md-sidenav class="md-sidenav-left md-whiteframe-z2 side-nav" md-component-id="side-bar">
 	<md-menu-content class="sidenav-menu">
-		<!-- <md-menu-item>
-			<md-button ng-click="onMenuSelect('profile')" ng-class="{'md-focused': page==='profile'}"><a href="#/"><i class="material-icons left sidenav-icon">person</i>Profile</a></md-button>
-		</md-menu-item> -->
+		<md-menu-item ng-if="isLoggedIn()">
+			<md-button ng-click="onMenuSelect('profile', '/profile')" ng-class="{'md-focused': page==='profile'}">
+				<img ng-src="{{user.image}}" class="circle" id="sidenav-profile-image">
+				{{user.name}}
+			</md-button>
+		</md-menu-item>
 		<md-menu-item ng-repeat="item in sideMenuItems">
 			<md-button ng-click="onMenuSelect(item.iid, item.view)"
 					   ng-class="{'md-focused': page===item.iid}">
