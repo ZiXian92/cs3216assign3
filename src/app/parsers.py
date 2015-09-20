@@ -236,7 +236,7 @@ class MarcAndAngelParser(BaseParser):
         return 'http://www.marcandangel.com?p={}/'.format(pid)
 
     @classmethod
-    def crawl(cls):
+    def crawl_all(cls):
         posts = []
         for category in ['money', 'tech', 'life', 'career']:
             base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
@@ -261,6 +261,31 @@ class MarcAndAngelParser(BaseParser):
                         })
     
                 page += 1
+
+        return posts
+
+    @classmethod
+    def crawl(cls):
+        posts = []
+        for category in ['money', 'tech', 'life', 'career']:
+            base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
+
+            url = base_url.format(category, 1)
+            request = requests.get(url)
+            if request.status_code != 200:
+                break
+
+            html = BeautifulSoup(request.text)
+            entry_titles = html.findAll('h1', class_='entry-title')
+            for entry_title in entry_titles:
+                link = entry_title.find('a')
+                if link['href']:
+                    posts.append({
+                        'title': link.getText().strip(),
+                        'url': link['href'],
+                        'category': [category],
+                        'source': cls.SOURCE_ID
+                    })
 
         return posts
 
