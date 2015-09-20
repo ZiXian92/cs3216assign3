@@ -1,8 +1,11 @@
 from app import app, api, utils, models
 
-from flask import render_template, request
-
+from flask import render_template, request, session, g
+from facebook import get_user_from_cookie
 from flask_restful import Resource
+
+FB_APP_ID = app.config['FB_APP_ID']
+FB_APP_SECRET = app.config['FB_APP_SECRET']
 
 
 class Article(Resource):
@@ -36,6 +39,27 @@ class Feed(Resource):
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
+
+@app.before_request
+def get_current_user():
+    if not session.get('user'):
+        result = get_user_from_cookie(cookies=request.cookies, app_id=FB_APP_ID,
+                                      app_secret=FB_APP_SECRET)
+        if result:
+            uid = result['uid']
+            user = models.User.get_by_id(uid)
+            if not user:
+                user = models.User(id=uid)
+                user.insert()
+
+            session['user'] = user.id
+
+    g.uid = session.get('user')
+    g.user = models.User.get_by_id(g.uid) if g.uid else None
+
+    if not g.user:
+        session['user'] = ''
 
 
 api.add_resource(Article, '/article/<string:source_id>/<string:post_id>')

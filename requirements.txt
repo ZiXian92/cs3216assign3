@@ -1,5 +1,6 @@
 aniso8601==1.0.0
 beautifulsoup4==4.4.0
+git+https://github.com/pythonforfacebook/facebook-sdk.git
 Flask==0.10.1
 Flask-RESTful==0.3.4
 Flask-SQLAlchemy==2.0

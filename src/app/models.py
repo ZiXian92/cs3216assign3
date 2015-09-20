@@ -6,17 +6,17 @@ from sqlalchemy.exc import IntegrityError
 post_like_table = db.Table('post_like', db.Model.metadata,
                            db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
                            db.Column('post_id', db.String, db.ForeignKey('posts.id'))
-)
+                           )
 
 post_bookmark_table = db.Table('post_bookmark', db.Model.metadata,
                                db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
                                db.Column('post_id', db.String, db.ForeignKey('posts.id'))
-)
+                               )
 
 post_category_association_table = db.Table('post_category_association', db.Model.metadata,
                                            db.Column('category_id', db.Integer, db.ForeignKey('categories.id')),
                                            db.Column('post_id', db.String, db.ForeignKey('posts.id'))
-)
+                                           )
 
 
 class User(db.Model):
@@ -26,6 +26,18 @@ class User(db.Model):
     display_name = db.Column(db.String)
     like_articles = db.relationship("Post", secondary=post_like_table)
     bookmark_articles = db.relationship("Post", secondary=post_bookmark_table)
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get(id)
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise
 
 
 class Category(db.Model):

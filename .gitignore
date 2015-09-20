@@ -2,5 +2,6 @@
 .idea/
 venv/
 app.db
+config.py
 src/app/static/node_modules/
 *.DS_Store
