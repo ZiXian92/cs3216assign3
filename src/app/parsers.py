@@ -237,10 +237,9 @@ class MarcAndAngelParser(BaseParser):
 
     @classmethod
     def crawl(cls):
-        categories = {}
+        posts = []
         for category in ['money', 'tech', 'life', 'career']:
             base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
-            posts = []
             page = 1
 
             while True:
@@ -254,18 +253,16 @@ class MarcAndAngelParser(BaseParser):
                 for entry_title in entry_titles:
                     link = entry_title.find('a')
                     if link['href']:
-                        posts.append(link['href'])
-                        
+                        posts.append({
+                            'title': link.getText().strip(),
+                            'url': link['href'],
+                            'category': [category],
+                            'source': cls.SOURCE_ID
+                        })
+    
                 page += 1
 
-            categories[category] = posts
-
-        # for category in categories:
-        #     posts = categories[category]
-        #     for post in posts:
-        #         cls.parse_post(post, [category])
-
-        return categories
+        return posts
 
 
 parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}
