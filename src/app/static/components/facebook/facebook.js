@@ -108,6 +108,7 @@ fb.factory('fbService', ['$window', function($window){
 					if(!angular.isDefined(response)){
 						$mdToast.show($mdToast.simple()
 							.content('Thanks for spreading the word!')
+							.position('top right')
 							.hideDelay(2000));
 					}
 				});
