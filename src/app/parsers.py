@@ -161,7 +161,8 @@ class MarcAndAngelParser(BaseParser):
     SOURCE_ID = 'marcandangle'
 
     @classmethod
-    def parse_post(cls, url, categories = []):
+    def parse_post(cls, id, categories = []):
+        url = cls.get_url(id)
         request = requests.get(url)
         if request.status_code != 200:
             raise ParserException()
@@ -186,7 +187,7 @@ class MarcAndAngelParser(BaseParser):
         def parse_headlines():
             element = content.findChild()
             headlines = []
-            while True:
+            while element:
                 if element.name == 'h3':
                     break
                 if element.name == 'p' and element.getText():
@@ -199,7 +200,7 @@ class MarcAndAngelParser(BaseParser):
             bullets = []
             for h3_element in h3_elements:
                 bullet = {'title': h3_element.getText(), 'details': []}
-                if bullet['title'] and bullet['title'][0].isdigit():
+                if bullet['title'] and not h3_element.get('class'):
                     bullets.append(bullet)
                     element = h3_element
                     while element.nextSibling:
@@ -208,6 +209,17 @@ class MarcAndAngelParser(BaseParser):
                             break
                         if element.name == 'p' and element.getText():
                             bullet['details'].append(element.getText().strip())
+
+            if len(bullets) == 0 and (content.find('ol') or content.find('ul')):
+                li_elements = content.select('li')
+                for li_element in li_elements:
+                    title = li_element.find('strong')
+                    p = li_element.next.next.next
+                    if not title:
+                        continue
+                    bullet = {'title': title.getText().strip(), 'details': p.strip()}
+                    bullets.append(bullet)
+
             return bullets
 
         return {
