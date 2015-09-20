@@ -5,7 +5,7 @@ titleBar.directive('titleBar', ['sidenavService', function(sidenavService){
 		restrict: 'A',
 		templateUrl: '/static/components/title-bar/title-bar.html',
 		scope: true,
-		controller: function($scope, $mdUtil, $mdSidenav){
+		controller: function($scope){
 			$scope.showSideBar = function(){
 				sidenavService.openSidenav();
 			};
