@@ -29,14 +29,18 @@ class Feed(Resource):
         limit = 5
         offset = (page - 1) * limit
         if category_id == 0:
-            result = [_.to_dict() for _ in models.Post.get_paginated(offset, limit)]
+            articles = models.Post.get_paginated(offset, limit)
         else:
             category = models.Category.get_by_id(category_id)
             if not category:
                 abort(404)
-            result = [_.to_dict() for _ in category.get_paginated_articles(offset, limit)]
-        for post in result:
-            post.update(utils.get_cached_post(post['source'], post['article_id']))
+            articles = category.get_paginated_articles(offset, limit)
+        result = []
+        for post in articles:
+            article_dict = post.to_dict()
+            article_dict.update(utils.get_cached_post(article_dict['source'], article_dict['article_id']))
+            article_dict['bookmarked'] = bool(g.user and post in g.user.bookmark_articles)
+            result.append(article_dict)
         return result
 
 
