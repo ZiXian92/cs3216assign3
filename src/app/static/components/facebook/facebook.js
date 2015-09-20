@@ -1,4 +1,4 @@
-var fb = angular.module('facebook', []);
+var fb = angular.module('facebook', ['ngMaterial']);
 
 fb.factory('fbService', ['$window', function($window){
 	var user = undefined;
@@ -19,7 +19,7 @@ fb.factory('fbService', ['$window', function($window){
 					token: response.authResponse.accessToken,
 					id: response.authResponse.userID
 				};
-				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square';
+				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
 				});
@@ -36,7 +36,7 @@ fb.factory('fbService', ['$window', function($window){
 					token: response.authResponse.accessToken,
 					id: response.authResponse.userID
 				};
-				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square';
+				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
 				});
@@ -86,12 +86,12 @@ fb.factory('fbService', ['$window', function($window){
 		logout: logout,
 		share: share
 	};
-}]).directive('fbMenu', ['fbService', function(fbService){
+}]).directive('fbMenu', ['fbService', '$mdToast', function(fbService, $mdToast){
 	return {
 		restrict: 'A',
 		replace: true,
 		templateUrl: '/static/components/facebook/fb-menu.html',
-		controller: function($scope, fbService){
+		controller: function($scope, fbService, $mdToast){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
 				fbService.login(function(){
@@ -104,8 +104,12 @@ fb.factory('fbService', ['$window', function($window){
 				});
 			};
 			$scope.share = function(){
-				fbService.share(function(){
-					console.log('Thanks for spreading the word!');
+				fbService.share(function(response){
+					if(!response.error_code){
+						$mdToast.show($mdToast.simple()
+							.content('Thanks for spreading the word!')
+							.hideDelay(2000));
+					}
 				});
 			};
 		}, link: function(scope, element, attrs){
