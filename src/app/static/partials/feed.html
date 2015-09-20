@@ -7,10 +7,10 @@
 			<div class="card-image">
 				<img ng-src="{{article.image}}">
 			</div>
-			<a ng-href="{{article.url}}" class="black-text"><h5 class="article-title">{{article.title}}</h5></a>
+			<a ng-href="{{article.url}}" class="black-text" target="_blank"><h5 class="article-title">{{article.title}}</h5></a>
 			<p class="flow-text article-desc">
 				Category: <a ng-href="{{article.categoryUrl}}">{{article.category}}</a><br>
-				Source: <a ng-href="{{article.url}}">{{article.source}}</a>
+				Source: <a ng-href="{{article.url}}" target="_blank">{{article.source}}</a>
 			</p>
 			<ul class="collapsible" data-accordion="true" watch>
 				<li ng-repeat="point in article.bullets" post-repeat="initCollapsible">
