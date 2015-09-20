@@ -3,13 +3,9 @@ var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource'
 app.controller('mainController', ['$scope', '$location', 'sidenavService', function($scope, $location, sidenavService){
 
 	// Methods
-	$scope.closeMenu = function(){
-		sidenavService.closeSidenav();
-	};
+	$scope.closeMenu = sidenavService.closeSidenav;
 
-	$scope.showMenu = function(){
-		sidenavService.openSidenav();
-	};
+	$scope.showMenu = sidenavService.openSidenav;
 
 	$scope.initCollapsible = function(){
 		$('.collapsible').collapsible();
@@ -62,13 +58,13 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 				$scope.isLoading = false;
 				if(temp.length>0){
 					temp.forEach(function(article){
+						article.categoryUrl = $scope.getUrlForCategory(article.category);
 						$scope.articles.push(article);
 					});
 					window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 				}
 			});
 		} else{
-			console.log('Retrieving from web storage');
 			$scope.isLoading = false;
 		}
 	};
@@ -77,20 +73,17 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		return '#/feed/' + categoryMapper.getCategoryId(articleCategory);
 	};
 
-	$scope.shareArticle = function(articleUrl){
-		FB.ui({
-			method: 'share',
-			href: articleUrl
-		}, function(response){
-
-		});
-	};	
-
 	// $scope.$watch('articles', function(){
 	// 	window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 	// }, true);
 
 	$scope.getArticles(category);
+}]).controller('profileController', ['$scope', '$location', 'fbService', function($scope, $location, fbService){
+	if(!fbService.isLoggedIn()){
+		$location.path('/');
+	}
+
+	$scope.user = fbService.getUser();
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
 		getAllArticles: {
@@ -158,6 +151,9 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	}).when('/feed/:category', {
 		templateUrl: '/static/partials/feed.html',
 		controller: 'feedController'
+	}).when('/profile', {
+		templateUrl: '/static/partials/profile.html',
+		controller: 'profileController'
 	}).otherwise({
 		redirectTo: '/'
 	});

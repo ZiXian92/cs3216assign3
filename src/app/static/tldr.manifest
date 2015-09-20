@@ -17,6 +17,7 @@ CACHE MANIFEST
 /static/partials/about.html
 /static/partials/feed.html
 /static/partials/home.html
+/static/partials/profile.html
 
 # CSS
 /static/css/feed.css
