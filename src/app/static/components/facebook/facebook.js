@@ -105,7 +105,7 @@ fb.factory('fbService', ['$window', function($window){
 			};
 			$scope.share = function(){
 				fbService.share(function(response){
-					if(!response.error_code){
+					if(!angular.isDefined(response.error_code){
 						$mdToast.show($mdToast.simple()
 							.content('Thanks for spreading the word!')
 							.hideDelay(2000));
