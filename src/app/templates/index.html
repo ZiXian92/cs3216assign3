@@ -8,28 +8,6 @@
     <title>tl;dr</title>
 </head>
 <body ng-app="tldr" ng-controller="mainController" md-swipe-right="showMenu()" md-swipe-left="closeMenu()">
-	<div id="fb-root"></div>
-	<script>
-		window.fbAsyncInit = function() {
-    		FB.init({
-    			appId: '1663895923894184',
-    			cookie: true,
-    			xfbml: true,
-    			version: 'v2.4'
-    		});
-		};
-
-		document.onready = function(){
-			(function(d, s, id){
-				var js, fjs = d.getElementsByTagName(s)[0];
-			    if (d.getElementById(id)) {return;}
-			    js = d.createElement(s); js.id = id;
-			    js.src = "//connect.facebook.net/en_US/sdk.js";
-			    fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));
-		};
-	</script>
-
 	<div title-bar></div>
 	<div side-nav data-page="{{page}}"></div>
 	<div ng-view></div>
