@@ -236,56 +236,36 @@ class MarcAndAngelParser(BaseParser):
         return 'http://www.marcandangel.com?p={}/'.format(pid)
 
     @classmethod
-    def crawl_all(cls):
+    def crawl(cls, limit = 1):
         posts = []
         for category in ['money', 'tech', 'life', 'career']:
             base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
             page = 1
-
-            while True:
+            while page <= limit:
                 url = base_url.format(category, page)
                 request = requests.get(url)
                 if request.status_code != 200:
                     break
 
                 html = BeautifulSoup(request.text)
-                entry_titles = html.findAll('h1', class_='entry-title')
-                for entry_title in entry_titles:
-                    link = entry_title.find('a')
+                articles = html.findAll('article')
+                for article in articles:
+                    article_classes = article['class']
+                    pid = None
+                    for article_class in article_classes:
+                        if article_class.startswith('post-'):
+                            pid = article_class[5:]
+                    link = article.find('h1').find('a')
                     if link['href']:
                         posts.append({
                             'title': link.getText().strip(),
+                            'id': pid,
                             'url': link['href'],
                             'category': [category],
                             'source': cls.SOURCE_ID
                         })
-    
+
                 page += 1
-
-        return posts
-
-    @classmethod
-    def crawl(cls):
-        posts = []
-        for category in ['money', 'tech', 'life', 'career']:
-            base_url = 'http://www.marcandangel.com/category/{}/page/{}/'
-
-            url = base_url.format(category, 1)
-            request = requests.get(url)
-            if request.status_code != 200:
-                break
-
-            html = BeautifulSoup(request.text)
-            entry_titles = html.findAll('h1', class_='entry-title')
-            for entry_title in entry_titles:
-                link = entry_title.find('a')
-                if link['href']:
-                    posts.append({
-                        'title': link.getText().strip(),
-                        'url': link['href'],
-                        'category': [category],
-                        'source': cls.SOURCE_ID
-                    })
 
         return posts
 
