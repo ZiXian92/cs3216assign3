@@ -85,7 +85,7 @@ fb.factory('fbService', ['$window', function($window){
 		logout: logout,
 		share: share
 	};
-}]).directive('fbMenu', ['fbService', '$mdToast', function(fbService, $mdToast){
+}]).directive('fbMenu', ['fbService', '$mdToast', '$location', function(fbService, $mdToast, $location){
 	return {
 		restrict: 'A',
 		replace: true,
@@ -94,10 +94,7 @@ fb.factory('fbService', ['$window', function($window){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
 				fbService.login(function(){
-					$mdToast.show($mdToast.simple()
-						.content('Successfully logged in')
-						.position('top right')
-						.hideDelay(2000));
+					$location.path($location.path());
 				});
 			};
 			$scope.logout = function(){
