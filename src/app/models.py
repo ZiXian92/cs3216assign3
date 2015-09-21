@@ -3,10 +3,10 @@ from datetime import datetime
 from app import db
 from sqlalchemy.exc import IntegrityError
 
-post_like_table = db.Table('post_like', db.Model.metadata,
-                           db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                           db.Column('post_id', db.String, db.ForeignKey('posts.id'))
-                           )
+# post_like_table = db.Table('post_like', db.Model.metadata,
+#                            db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+#                            db.Column('post_id', db.String, db.ForeignKey('posts.id'))
+#                            )
 
 post_bookmark_table = db.Table('post_bookmark', db.Model.metadata,
                                db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
@@ -24,7 +24,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     display_name = db.Column(db.String)
-    like_articles = db.relationship("Post", secondary=post_like_table, backref="likes")
+    # like_articles = db.relationship("Post", secondary=post_like_table, backref="likes")
     bookmark_articles = db.relationship("Post", secondary=post_bookmark_table, backref="bookmarks")
 
     @classmethod
