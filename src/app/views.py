@@ -8,11 +8,21 @@ FB_APP_ID = app.config['FB_APP_ID']
 FB_APP_SECRET = app.config['FB_APP_SECRET']
 
 
+def prepare_article(post):
+    article_dict = post.to_dict()
+    article_dict.update(utils.get_cached_post(article_dict['source'], article_dict['article_id']))
+    article_dict['bookmarked'] = bool(g.user and post in g.user.bookmark_articles)
+    return article_dict
+
+
+def prepare_feed(articles):
+    return [prepare_article(_) for _ in articles]
+
+
 class Article(Resource):
     def get(self, source_id, post_id):
-        article = models.Post.get_by_id(source_id, post_id).to_dict()
-        article.update(utils.get_cached_post(source_id, post_id))
-        return article
+        article = models.Post.get_by_id(source_id, post_id)
+        return prepare_article(article)
 
 
 class Categories(Resource):
@@ -35,13 +45,8 @@ class Feed(Resource):
             if not category:
                 abort(404)
             articles = category.get_paginated_articles(offset, limit)
-        result = []
-        for post in articles:
-            article_dict = post.to_dict()
-            article_dict.update(utils.get_cached_post(article_dict['source'], article_dict['article_id']))
-            article_dict['bookmarked'] = bool(g.user and post in g.user.bookmark_articles)
-            result.append(article_dict)
-        return result
+        return prepare_feed(articles)
+
 
 
 class Bookmarks(Resource):
@@ -61,10 +66,8 @@ class Bookmarks(Resource):
         bookmarked_articles = g.user.bookmark_articles
         if category > 0:
             bookmarked_articles = [_ for _ in bookmarked_articles if _.categories[0].id == category]
-        data = [_.to_dict() for _ in bookmarked_articles[limit * (page - 1):limit * page]]
-        for post in data:
-            post.update(utils.get_cached_post(post['source'], post['article_id']))
-        return {'total': len(bookmarked_articles), 'data': data}
+        return {'total': len(bookmarked_articles),
+                'data': prepare_feed(bookmarked_articles[limit * (page - 1):limit * page])}
 
     def post(self):
         if not g.user:
