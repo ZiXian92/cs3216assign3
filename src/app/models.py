@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app import db
 from sqlalchemy.exc import IntegrityError
@@ -95,6 +95,12 @@ class Post(db.Model):
         return {'title': self.title, 'source': self.id.split('/')[0], 'article_id': self.id.split('/')[1],
                 'image': self.image, 'time': self.create_time.isoformat(), 'category': self.categories[0].name,
                 'bookmarks': len(self.bookmarks)}
+
+    @classmethod
+    def get_trending(cls, days):
+        return sorted(filter(lambda x: len(x.bookmarks),
+                             cls.query.filter(cls.create_time > (datetime.utcnow() - timedelta(days=days))).all()),
+                      key=lambda x: len(x.bookmarks))
 
     @classmethod
     def get_paginated(cls, offset, limit):

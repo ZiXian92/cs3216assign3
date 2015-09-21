@@ -48,6 +48,15 @@ class Feed(Resource):
         return prepare_feed(articles)
 
 
+class Trending(Resource):
+    def get(self):
+        try:
+            days = int(request.args.get('days', 5))
+        except ValueError:
+            abort(400)
+        articles = models.Post.get_trending(days)
+        return prepare_feed(articles)
+
 
 class Bookmarks(Resource):
     parser = reqparse.RequestParser()
@@ -139,3 +148,4 @@ api.add_resource(Bookmarks, '/bookmark')
 api.add_resource(BookmarksCount, '/bookmark_count')
 api.add_resource(Categories, '/categories')
 api.add_resource(Feed, '/feed/<int:category_id>')
+api.add_resource(Trending, '/trending')
