@@ -1,6 +1,6 @@
 <md-menu>
 	<md-button class="md-icon-button" ng-click="$mdOpenMenu($event)">
-		<ng-md-icon icon="facebook-box" style="fill: #3b5998"size="36"></ng-md-icon>
+		<ng-md-icon icon="facebook-box" style="fill: white"size="36"></ng-md-icon>
 	</md-button>
 	<md-menu-content width="4">
 		<md-menu-item ng-if="!isLoggedIn()">
@@ -15,12 +15,6 @@
 				Logout from Facebook
 			</md-button>
 		</md-menu-item>
-		<!-- <md-menu-item>
-			<md-button>
-				<md-icon><ng-md-icon icon="thumb_up" size="24"></ng-md-icon></md-icon>
-				Like us on Facebook
-			</md-button>
-		</md-menu-item> -->
 		<md-menu-item>
 			<md-button ng-click="share()">
 				<md-icon><ng-md-icon icon="share" size="24"></ng-md-icon></md-icon>
