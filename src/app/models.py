@@ -100,7 +100,7 @@ class Post(db.Model):
     def get_trending(cls, days):
         return sorted(filter(lambda x: len(x.bookmarks),
                              cls.query.filter(cls.create_time > (datetime.utcnow() - timedelta(days=days))).all()),
-                      key=lambda x: len(x.bookmarks))
+                      key=lambda x: len(x.bookmarks), reverse=True)
 
     @classmethod
     def get_paginated(cls, offset, limit):
