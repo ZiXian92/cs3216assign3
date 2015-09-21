@@ -110,7 +110,7 @@ fb.factory('fbService', ['$window', function($window){
 		controller: function($scope, fbService, $mdToast){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
-				fbService.login({redirectUri: $location.path(), display: 'touch'});
+				fbService.login({redirectUri: $location.path()});
 			};
 			$scope.logout = function(){
 				fbService.logout(function(){
