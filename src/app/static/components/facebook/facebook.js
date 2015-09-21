@@ -124,7 +124,7 @@ fb.factory('fbService', ['$window', function($window){
 			$scope.share = function(){
 				fbService.share('http://tldr.sshz.org', function(response){
 					if(!angular.isDefined(response)){
-						$mdDisalog.show($mdDialog.alert()
+						$mdDialog.show($mdDialog.alert()
 							.clickOutsideToClose(true)
 							.title('Thanks for spreading the word!')
 							.ok('Ok'));
