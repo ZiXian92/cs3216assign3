@@ -1,4 +1,4 @@
-var fb = angular.module('facebook', ['ngMaterial']);
+var fb = angular.module('facebook', ['ngMaterial', 'ngRoute']);
 
 fb.factory('fbService', ['$window', function($window){
 	var user = undefined;
@@ -100,7 +100,7 @@ fb.factory('fbService', ['$window', function($window){
 		logout: logout,
 		share: share
 	};
-}]).directive('fbMenu', ['fbService', '$mdToast', '$location', function(fbService, $mdToast, $location){
+}]).directive('fbMenu', ['fbService', '$mdToast', '$location', '$route', function(fbService, $mdToast, $location, $route){
 	return {
 		restrict: 'A',
 		replace: true,
@@ -109,8 +109,8 @@ fb.factory('fbService', ['$window', function($window){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
 				fbService.login(function(){
-					$location.path($location.path());
-					$scope.$apply();
+					$route.reload();
+					// $scope.$apply();
 					// window.location.reload();
 				});
 			};
