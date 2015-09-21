@@ -114,10 +114,7 @@ fb.factory('fbService', ['$window', function($window){
 			};
 			$scope.logout = function(){
 				fbService.logout(function(){
-					$mdToast.show($mdToast.simple()
-						.content('Thank you for using TL;DR')
-						.position('top right')
-						.hideDelay(2000));
+					$location.path('/');
 				});
 			};
 			$scope.share = function(){
