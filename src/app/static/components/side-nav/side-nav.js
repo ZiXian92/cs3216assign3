@@ -46,11 +46,11 @@ sideNav.directive('sideNav', ['$location', 'sidenavService', 'fbService', functi
 				'view': '/feed/3',
 				'icon': 'devices'
 			}, {
-				'title': 'Work',
-				'iid': 'work',
-				'view': '/feed/4',
-				'icon': 'work'
-			}, {
+			// 	'title': 'Work',
+			// 	'iid': 'work',
+			// 	'view': '/feed/4',
+			// 	'icon': 'work'
+			// }, {
 				'title': 'Lifestyle',
 				'iid': 'lifestyle',
 				'view': '/feed/5',
