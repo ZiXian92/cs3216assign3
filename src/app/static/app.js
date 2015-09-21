@@ -23,7 +23,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', '$location', '$mdToast', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', function($scope, $location, $mdToast, feedService, fbService, bookmarkService, categoryMapper){
+}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', function($scope, $location, $mdDialog, $mdToast, feedService, fbService, bookmarkService, categoryMapper){
 	var category = $location.path().split('/')[2];
 	category = category ? Number(category) : 0;
 	var lastPage = 1;
@@ -104,6 +104,14 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	 * @param {Object} article
 	 */
 	$scope.onClickBookmarkForArticle = function(article){
+		if(!fbService.isLoggedIn){
+			$mdDialog.show($mdDialog.alert()
+				.clickOutsideToClose(true)
+				.title('Not allowed')
+				.content('Please log in to bookmark this article.')
+				.ok('Ok'));
+			return;
+		}
 		if(!article.bookmarked){
 			$scope.bookmarkArticle(article);
 		} else{
