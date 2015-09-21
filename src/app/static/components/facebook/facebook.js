@@ -109,12 +109,16 @@ fb.factory('fbService', ['$window', function($window){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
 				fbService.login(function(){
-					window.location.reload();
+					$location.path($location.path());
+					$scope.$apply();
+					// window.location.reload();
 				});
 			};
 			$scope.logout = function(){
 				fbService.logout(function(){
-					window.location.href = '/';
+					$location.path('/');
+					$scope.$apply();
+					// window.location.href = '/';
 				});
 			};
 			$scope.share = function(){
