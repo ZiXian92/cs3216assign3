@@ -104,7 +104,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	 * @param {Object} article
 	 */
 	$scope.onClickBookmarkForArticle = function(article){
-		if(!fbService.isLoggedIn){
+		if(!fbService.isLoggedIn()){
 			$mdDialog.show($mdDialog.alert()
 				.clickOutsideToClose(true)
 				.title('Not allowed')
