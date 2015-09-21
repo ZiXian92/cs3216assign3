@@ -1,7 +1,7 @@
 from app import app, api, utils, models, db
 
 from flask import render_template, request, g, abort
-from facebook import get_user_from_cookie
+from facebook import parse_signed_request
 from flask_restful import Resource, reqparse
 
 FB_APP_ID = app.config['FB_APP_ID']
@@ -94,19 +94,20 @@ def index():
 
 @app.before_request
 def get_current_user():
-    result = get_user_from_cookie(cookies=request.cookies, app_id=FB_APP_ID,
-                                  app_secret=FB_APP_SECRET)
-    if result:
-        uid = result['uid']
-        user = models.User.get_by_id(uid)
-        if not user:
-            user = models.User(id=uid)
-            user.insert()
-        g.uid = user.id
-        g.user = user
-    else:
-        g.uid = None
-        g.user = None
+    cookie = request.cookies.get("fbsr_" + FB_APP_ID, "")
+    if cookie:
+        result = parse_signed_request(signed_request=cookie, app_secret=FB_APP_SECRET)
+        if result:
+            uid = result["user_id"]
+            user = models.User.get_by_id(uid)
+            if not user:
+                user = models.User(id=uid)
+                user.insert()
+            g.uid = user.id
+            g.user = user
+            return
+    g.uid = None
+    g.user = None
 
 
 api.add_resource(Article, '/article/<string:source_id>/<string:post_id>')
