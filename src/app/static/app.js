@@ -123,6 +123,15 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		});
 	};
 
+	/*
+	 * @param {String} url
+	 */
+	$scope.shareArticle = function(url){
+		fbService.share(url, function(){
+
+		});
+	};
+
 	// $scope.$watch('articles', function(){
 	// 	window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 	// }, true);
@@ -181,6 +190,15 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			'source_id': article.source
 		}, function(response){
 			$scope.articles.splice(articleIndex, 1);
+		});
+	};
+
+	/*
+	 * @param {String} url
+	 */
+	$scope.shareArticle = function(url){
+		fbService.share(url, function(){
+
 		});
 	};
 

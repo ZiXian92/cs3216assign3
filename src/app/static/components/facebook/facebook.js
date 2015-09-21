@@ -79,10 +79,15 @@ fb.factory('fbService', ['$window', function($window){
 			}
 		});
 	};
-	var share = function(callback){
+
+	/*
+	 * @param {String} url
+	 * @param {function()=} callback
+	 */
+	var share = function(url, callback){
 		FB.ui({
 			method: 'share',
-			href: 'http://tldr.sshz.org'
+			href: 'url'
 		}, function(response){
 			if(angular.isFunction(callback)){
 				callback();
@@ -116,7 +121,7 @@ fb.factory('fbService', ['$window', function($window){
 				});
 			};
 			$scope.share = function(){
-				fbService.share(function(response){
+				fbService.share('http://tldr.sshz.org', function(response){
 					if(!angular.isDefined(response)){
 						$mdToast.show($mdToast.simple()
 							.content('Thanks for spreading the word!')
