@@ -100,7 +100,7 @@ fb.factory('fbService', ['$window', function($window){
 		logout: logout,
 		share: share
 	};
-}]).directive('fbMenu', ['fbService', '$mdToast', '$location', '$route', function(fbService, $mdToast, $location, $route){
+}]).directive('fbMenu', ['fbService', '$mdDialog', '$location', '$route', function(fbService, $mdDialog, $location, $route){
 	return {
 		restrict: 'A',
 		replace: true,
@@ -124,10 +124,10 @@ fb.factory('fbService', ['$window', function($window){
 			$scope.share = function(){
 				fbService.share('http://tldr.sshz.org', function(response){
 					if(!angular.isDefined(response)){
-						$mdToast.show($mdToast.simple()
-							.content('Thanks for spreading the word!')
-							.position('top right')
-							.hideDelay(2000));
+						$mdDisalog.show($mdDialog.alert()
+							.clickOutsideToClose(true)
+							.title('Thanks for spreading the word!')
+							.ok('Ok'));
 					}
 				});
 			};
