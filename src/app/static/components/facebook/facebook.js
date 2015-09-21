@@ -87,7 +87,7 @@ fb.factory('fbService', ['$window', function($window){
 	var share = function(url, callback){
 		FB.ui({
 			method: 'share',
-			href: 'url'
+			href: url
 		}, function(response){
 			if(angular.isFunction(callback)){
 				callback();
