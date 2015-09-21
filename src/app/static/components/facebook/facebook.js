@@ -59,14 +59,24 @@ fb.factory('fbService', ['$window', function($window){
 	var isLoggedIn = function(){
 		return angular.isDefined(user);
 	};
-	var login = function(callback){
+
+	/*
+	 * @param {Object=} options FB.login() options
+	 * @param {function()=} callback
+	 */
+	var login = function(options, callback){
+		options = angular.isDefined(options) ? options : {};
 		FB.login(function(response){
-			callback();
-		});
+			if(angular.isFunction(callback)){
+				callback();
+			}
+		}, options);
 	};
 	var logout = function(callback){
 		FB.logout(function(response){
-			callback();
+			if(angular.isFunction(callback)){
+				callback();
+			}
 		});
 	};
 	var share = function(callback){
@@ -74,7 +84,9 @@ fb.factory('fbService', ['$window', function($window){
 			method: 'share',
 			href: 'http://tldr.sshz.org'
 		}, function(response){
-			callback();
+			if(angular.isFunction(callback)){
+				callback();
+			}
 		});
 	};
 
@@ -93,9 +105,7 @@ fb.factory('fbService', ['$window', function($window){
 		controller: function($scope, fbService, $mdToast){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
-				fbService.login(function(){
-					$location.path($location.path());
-				});
+				fbService.login({redirectUri: $location.path(), display: 'touch'});
 			};
 			$scope.logout = function(){
 				fbService.logout(function(){
