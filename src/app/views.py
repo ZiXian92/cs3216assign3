@@ -55,12 +55,16 @@ class Bookmarks(Resource):
             abort(403)
         try:
             page = int(request.args.get('page', 1))
+            category = int(request.args.get('category', 0))
         except ValueError:
             abort(400)
-        data = [_.to_dict() for _ in g.user.bookmark_articles[limit * (page - 1):limit * page]]
+        bookmarked_articles = g.user.bookmark_articles
+        if category > 0:
+            bookmarked_articles = [_ for _ in bookmarked_articles if _.categories[0].id == category]
+        data = [_.to_dict() for _ in bookmarked_articles[limit * (page - 1):limit * page]]
         for post in data:
             post.update(utils.get_cached_post(post['source'], post['article_id']))
-        return {'total': len(g.user.bookmark_articles), 'data': data}
+        return {'total': len(bookmarked_articles), 'data': data}
 
     def post(self):
         if not g.user:
