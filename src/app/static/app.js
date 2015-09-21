@@ -36,7 +36,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			'article_id': article.article_id,
 			'source_id': article.source
 		}, function(){
-			article.bookmerked = true;
+			article.bookmarked = true;
 		}, function(response){
 			if(response.status===403){
 				$mdToast.show($mdToast.simple()
@@ -93,8 +93,34 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		}
 	};
 
+	/*
+	 * @param {Number} articleCategory
+	 */
 	$scope.getUrlForCategory = function(articleCategory){
 		return '#/feed/' + categoryMapper.getCategoryId(articleCategory);
+	};
+
+	/*
+	 * @param {Object} article
+	 */
+	$scope.onClickBookmarkForArticle = function(article){
+		if(!article.bookmarked){
+			$scope.bookmarkArticle(article);
+		} else{
+			$scope.removeBookmark(article);
+		}
+	};
+
+	/*
+	 * @param {Object} article
+	 */
+	$scope.removeBookmark = function(article){
+		bookmarkService.removeBookmark({
+			'article_id': article.article_id,
+			'source_id': article.source
+		}, function(response){
+			article.bookmarked = false;
+		});
 	};
 
 	// $scope.$watch('articles', function(){
@@ -143,6 +169,19 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 
 	$scope.getUrlForCategory = function(articleCategory){
 		return '#/feed/'+categoryMapper.getCategoryId(articleCategory);
+	};
+
+	/*
+	 * @param {Number} articleIndex
+	 */
+	$scope.removeBookmark = function(articleIndex){
+		var article = $scope.articles[articleIndex];
+		bookmarkService.removeBookmark({
+			'article_id': article.article_id,
+			'source_id': article.source
+		}, function(response){
+			$scope.articles.splice(articleIndex, 1);
+		});
 	};
 
 	$scope.getBookmarks();
