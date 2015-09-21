@@ -91,6 +91,23 @@ class Bookmarks(Resource):
         return args
 
 
+class BookmarksCount(Resource):
+    def get(self):
+        if not g.user:
+            abort(403)
+        bookmark_articles = g.user.bookmark_articles
+
+        def count_by_category(category):
+            count = 0
+            for article in bookmark_articles:
+                if article.categories[0].id == category:
+                    count += 1
+            return count
+
+        result_by_categories = {category.id: count_by_category(category.id) for category in models.Category.get_all()}
+        return {'total': len(bookmark_articles), 'by_categories': result_by_categories}
+
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -116,5 +133,6 @@ def get_current_user():
 
 api.add_resource(Article, '/article/<string:source_id>/<string:post_id>')
 api.add_resource(Bookmarks, '/bookmark')
+api.add_resource(BookmarksCount, '/bookmark_count')
 api.add_resource(Categories, '/categories')
 api.add_resource(Feed, '/feed/<int:category_id>')
