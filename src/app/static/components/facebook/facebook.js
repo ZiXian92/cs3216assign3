@@ -61,16 +61,14 @@ fb.factory('fbService', ['$window', function($window){
 	};
 
 	/*
-	 * @param {Object=} options FB.login() options
 	 * @param {function()=} callback
 	 */
-	var login = function(options, callback){
-		options = angular.isDefined(options) ? options : {};
+	var login = function(callback){
 		FB.login(function(response){
 			if(angular.isFunction(callback)){
 				callback();
 			}
-		}, options);
+		});
 	};
 	var logout = function(callback){
 		FB.logout(function(response){
@@ -110,11 +108,13 @@ fb.factory('fbService', ['$window', function($window){
 		controller: function($scope, fbService, $mdToast){
 			$scope.isLoggedIn = fbService.isLoggedIn;
 			$scope.login = function(){
-				fbService.login({redirectUri: $location.path()});
+				fbService.login(function(){
+					window.location.reload();
+				});
 			};
 			$scope.logout = function(){
 				fbService.logout(function(){
-					$location.path('/');
+					window.location.href = '/';
 				});
 			};
 			$scope.share = function(){
