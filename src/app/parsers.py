@@ -102,9 +102,16 @@ class LifeHackParser(BaseParser):
                 details['details'] = [_ for _ in details['details'] if _]
                 return details
 
+            def refine(bullets):
+                refined_bullets = []
+                for bullet in bullets:
+                    if not bullet in refined_bullets:
+                        refined_bullets.append(bullet)
+                return refined_bullets
+
             for bullet_tag in ['h2', 'h1', 'ol']:
                 bullet_elements = post_content.select(bullet_tag)
-                bullets = [parse_bullet(_, bullet_tag) for _ in bullet_elements if _ and _.getText().strip()]
+                bullets = refine([parse_bullet(_, bullet_tag) for _ in bullet_elements if _ and _.getText().strip()])
                 if len(bullets) > 0:
                     return bullets
             return []
