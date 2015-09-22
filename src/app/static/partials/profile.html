@@ -1,7 +1,7 @@
 <div class="container" infinite-scroll="getMoreBookmarks()" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
-	<div layout="column" layout-align="start center">
+	<div layout="column" layout-align="start center" class="md-padding">
 		<img ng-src="{{user.image}}" class="circle" style="width: 100px; height: 100px">
-		<h4>{{user.name}}'s Bookmarks</h4>
+		<h5>{{user.name}}'s Bookmarks</h5>
 	</div>
 	<md-tabs md-selected="1">
 		<md-tab label="All({{bookmarkSummary.total}})" md-on-select="getBookmarksForCategory('0')"></md-tab>
