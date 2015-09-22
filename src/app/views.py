@@ -9,6 +9,8 @@ FB_APP_SECRET = app.config['FB_APP_SECRET']
 
 
 def prepare_article(post):
+    if not post:
+        abort(404)
     article_id = post.get_id()
     article_dict = utils.get_cached_post(article_id['source'], article_id['article_id'])
     article_dict.update(post.to_dict())
