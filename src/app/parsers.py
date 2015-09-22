@@ -289,4 +289,68 @@ class MarcAndAngelParser(BaseParser):
         return posts
 
 
+class NewserParser(BaseParser):
+    SOURCE_ID = 'newser'
+
+    @classmethod
+    def parse_post(cls, url):
+        request = requests.get(url)
+        if request.status_code != 200:
+            raise ParserException()
+        html = BeautifulSoup(request.text)
+        title = html.find('div', class_='storyTitle').find('h1').getText()
+        headlines = html.find('div', class_='storyTitle').find('h2').getText()
+        image_url = html.find('div', class_='storyTopSideMedia').find('img')['src']
+        
+        def parse_bullets():
+            paragraphs = html.findAll('p', class_='storyParagraph')
+            bullets = []
+            for paragraph in paragraphs:
+                text = paragraph.getText().strip()
+                while True:
+                    index = text.find('  ')
+                    if index < 0:
+                        break
+                    text = text[index + 2:]
+                for i in range(0, len(text)):
+                    if text[i] in '.!?':
+                        bullets.append({'title': text[:i + 1], 'details': text[i + 1:]})
+                        break
+            return bullets
+
+        return {
+            'title': title,
+            'image_url': image_url,
+            'headlines': headlines,
+            'bullets': parse_bullets(),
+            'url': url,
+            'category': cls.map_category([]),
+            'id': cls.get_pid(url),
+            'source': cls.SOURCE_ID
+        }
+
+    @classmethod
+    def get_pid(cls, url):
+        return url.split('/')[4]
+
+    @classmethod
+    def get_url(cls, pid):
+        return ''
+
+    @classmethod
+    def crawl(cls):
+        return [{
+                    'id': '0',
+                    'title': 'Dummy Title',
+                    'category': cls.map_category(['Category One', 'Category Two']),
+                    'image': '',
+                    'create_time': datetime(1970, 1, 1),
+                    'source': cls.SOURCE_ID
+                }]
+
+    @classmethod
+    def map_category(cls, categories):
+        return 'Others'
+
+
 parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}
