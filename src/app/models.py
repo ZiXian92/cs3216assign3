@@ -48,7 +48,7 @@ class Category(db.Model):
 
     @classmethod
     def create_categories(cls):
-        for category_name in ['Self-help', 'Money', 'Technology', 'Work', 'Lifestyle', 'Others']:
+        for category_name in ['Self-help', 'Money', 'Technology', 'Lifestyle', 'Others']:
             category = Category(name=category_name)
             try:
                 db.session.add(category)
