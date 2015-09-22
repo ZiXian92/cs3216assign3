@@ -165,7 +165,7 @@ class LifeHackParser(BaseParser):
 
 
 class MarcAndAngelParser(BaseParser):
-    SOURCE_ID = 'marcandangle'
+    SOURCE_ID = 'marcandangel'
 
     @classmethod
     def parse_post(cls, id, categories = []):
