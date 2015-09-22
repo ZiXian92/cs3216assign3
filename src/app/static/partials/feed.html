@@ -1,4 +1,4 @@
-<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-immediate-check="false">
+<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
 
 <div ng-if="articles.length===0 && !isLoading">No articles found for this category.</div>
 <div class="row" ng-repeat="article in articles">
