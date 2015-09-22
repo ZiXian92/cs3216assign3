@@ -26,7 +26,7 @@
 					<md-icon>
 						<ng-md-icon icon="{{ article.bookmarked ? 'bookmark' : 'bookmark_outline'}}" style="fill: black"
 									size="24"></ng-md-icon>
-						<md-tooltip>{{ article.bookmarked ? 'Remove bookmark' : 'Bookmark this article'}}</md-tooltip>
+						<md-tooltip>{{ article.bookmarked ? 'Bookmarked' : 'Bookmark this article'}}</md-tooltip>
 					</md-icon>
 				</md-button>
 				<md-button flex class="article-action-button" ng-click="shareArticle(article.url)">
