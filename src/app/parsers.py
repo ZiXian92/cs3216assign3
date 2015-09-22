@@ -234,7 +234,7 @@ class MarcAndAngelParser(BaseParser):
             'image': parse_image_url(),
             'headlines': parse_headlines(),
             'bullets': parse_bullets(),
-            'category': cls.map_category(categories),
+            'category': categories,
             'id': pid,
             'url': url,
             'source': cls.SOURCE_ID
