@@ -38,6 +38,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			'source_id': article.source
 		}, function(){
 			article.bookmarked = true;
+			article.bookmarks += 1;
 		}, function(response){
 			if(response.status===403){
 				$mdToast.show($mdToast.simple()
@@ -132,6 +133,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			'source_id': article.source
 		}, function(response){
 			article.bookmarked = false;
+			article.bookmarks -= 1;
 		});
 	};
 
