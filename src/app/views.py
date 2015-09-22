@@ -9,8 +9,9 @@ FB_APP_SECRET = app.config['FB_APP_SECRET']
 
 
 def prepare_article(post):
-    article_dict = post.to_dict()
-    article_dict.update(utils.get_cached_post(article_dict['source'], article_dict['article_id']))
+    article_id = post.get_id()
+    article_dict = utils.get_cached_post(article_id['source'], article_id['article_id'])
+    article_dict.update(post.to_dict())
     article_dict['bookmarked'] = bool(g.user and post in g.user.bookmark_articles)
     return article_dict
 
