@@ -203,6 +203,11 @@ class MarcAndAngelParser(BaseParser):
             return headlines
 
         def parse_bullets():
+            def refine(text):
+                while text and not text[0].isalnum():
+                    text = text[1:]
+                return text
+
             h3_elements = content.select('h3')
             bullets = []
             for h3_element in h3_elements:
@@ -215,7 +220,7 @@ class MarcAndAngelParser(BaseParser):
                         if element.name == 'h3':
                             break
                         if element.name == 'p' and element.getText():
-                            bullet['details'].append(element.getText().strip())
+                            bullet['details'].append(refine(element.getText().strip()))
 
             if len(bullets) == 0 and (content.find('ol') or content.find('ul')):
                 li_elements = content.select('li')
@@ -224,7 +229,8 @@ class MarcAndAngelParser(BaseParser):
                     p = li_element.next.next.next
                     if not title:
                         continue
-                    bullet = {'title': title.getText().strip(), 'details': p.strip()}
+
+                    bullet = {'title': title.getText().strip(), 'details': refine(p.strip())}
                     bullets.append(bullet)
 
             return bullets
