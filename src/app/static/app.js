@@ -220,6 +220,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			'source_id': article.source
 		}, function(response){
 			$scope.articles.splice(articleIndex, 1);
+			$scope.bookmarkSummary = bookmarkService.getSummary({}, function (response) {});
 		});
 	};
 
