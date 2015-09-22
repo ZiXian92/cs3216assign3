@@ -6,12 +6,15 @@
 		<span flex></span>
 		<img src="/static/images/logo.png" class="title-bar-logo" ng-click="onClickLogo()">
 		<span flex></span>
-		<md-button ng-click="onClickLogin()" ng-if="!isLoggedIn()" class="right">
-			<ng-md-icon icon="facebook-box" style="fill: white; vertical-align: middle"size="36"></ng-md-icon>
-			Log In
+		<md-button ng-click="onClickLogin()" ng-if="!isLoggedIn()">
+			Login
+			<div class="fb-login-icon">
+				<ng-md-icon icon="facebook-box" style="fill: white" size="30"></ng-md-icon>
+			</div>
 		</md-button>
 		<md-button ng-click="onClickLogout()" ng-if="isLoggedIn()">
-			<img ng-src="{{user.image}}" style="vertical-align: middle; width: 45px; height: 45px; border-radius: 50%"> Logout
+			Logout
+			<img ng-src="{{ user.image }}" class="fb-profile-image">
 		</md-button>
 		<!-- <div fb-menu></div> -->
 	</div>
