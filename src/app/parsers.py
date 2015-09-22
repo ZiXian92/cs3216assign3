@@ -118,7 +118,7 @@ class LifeHackParser(BaseParser):
 
         return {
             'title': title,
-            'image_url': parse_image_url(),
+            'image': parse_image_url(),
             'headlines': parse_headlines(),
             'bullets': parse_bullets(),
             'url': url,
@@ -198,7 +198,7 @@ class MarcAndAngelParser(BaseParser):
                 if element.name == 'h3':
                     break
                 if element.name == 'p' and element.getText():
-                    headlines.append(element.getText().strip()) 
+                    headlines.append(element.getText().strip())
                 element = element.nextSibling
             return headlines
 
@@ -231,7 +231,7 @@ class MarcAndAngelParser(BaseParser):
 
         return {
             'title': title,
-            'image_url': parse_image_url(),
+            'image': parse_image_url(),
             'headlines': parse_headlines(),
             'bullets': parse_bullets(),
             'category': cls.map_category(categories),
@@ -275,13 +275,16 @@ class MarcAndAngelParser(BaseParser):
                         if article_class.startswith('post-'):
                             pid = article_class[5:]
                     link = article.find('h1').find('a')
+                    time = datetime.strptime(article.find('time')['datetime'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
                     if link['href']:
                         posts.append({
                             'title': link.getText().strip(),
                             'id': pid,
                             'url': link['href'],
-                            'category': [category],
-                            'source': cls.SOURCE_ID
+                            'category': cls.map_category([category]),
+                            'source': cls.SOURCE_ID,
+                            'image': '',
+                            'create_time': time
                         })
 
                 page += 1
@@ -353,4 +356,4 @@ class NewserParser(BaseParser):
         return 'Others'
 
 
-parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser]}
+parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser, MarcAndAngelParser]}

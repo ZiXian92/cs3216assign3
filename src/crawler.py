@@ -8,6 +8,7 @@ models.Category.create_categories()
 def main():
     posts = [item for parser in parsers.parsers.values() for item in parser.crawl()]
     for post in posts:
+        print("{}/{}".format(post['source'], post['id']))
         new_post = models.Post(id="{}/{}".format(post['source'], post['id']),
                                title=post['title'],
                                image=post['image'],
