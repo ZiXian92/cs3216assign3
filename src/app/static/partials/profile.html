@@ -1,8 +1,12 @@
-<div class="container">
+<div class="container" infinite-scroll="getMoreBookmarks()" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
 	<div layout="column" layout-align="start center">
-		<img ng-src="{{user.image}}" class="circle">
-		<h3>{{user.name}}'s Bookmarks</h3>
+		<img ng-src="{{user.image}}" class="circle" style="width: 100px; height: 100px">
+		<h4>{{user.name}}'s Bookmarks</h4>
 	</div>
+	<md-tabs md-selected="1">
+		<md-tab label="All({{bookmarkSummary.total}})" md-on-select="getBookmarksForCategory('0')"></md-tab>
+		<md-tab ng-repeat="(category, count) in bookmarkSummary.by_categories" label="{{getCategoryNameForId(category)}}({{count}})" md-on-select="getBookmarksForCategory(category)"></md-tab>
+	</md-tabs>
 	<div class="row" ng-repeat="article in articles">
 		<div class="col s12">
 			<div class="card">

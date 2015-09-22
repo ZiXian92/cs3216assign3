@@ -152,26 +152,34 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 
 	var lastPage = 1;
 
+	var currentCategory = '0';
 	$scope.isLoading = false;
 	$scope.user = fbService.getUser();
 
-	$scope.getBookmarks = function(){
+	/*
+	 * @param {String} category
+	 */
+	$scope.getBookmarksForCategory = function(category){
+		currentCategory = category;
+		lastPage = 1;
 		$scope.isLoading = true;
-		bookmarkService.getBookmarks({}, function(response){
+		bookmarkService.getBookmarks({category: category}, function(response){
 			$scope.articles = response.data;
 			$scope.articles.forEach(function(article){
 				article.categoryUrl = $scope.getUrlForCategory(article.category);
 			});
 			$scope.isLoading = false;
-		});	
+		});
 	};
+
+	$scope.getCategoryNameForId = categoryMapper.getCategoryNameForId;
 
 	$scope.getMoreBookmarks = function(){
 		if($scope.isLoading){
 			return;
 		}
 		$scope.isLoading = true;
-		bookmarkService.getBookmarks({page: lastPage+1}, function(response){
+		bookmarkService.getBookmarks({category: currentCategory, page: lastPage+1}, function(response){
 			var temp = response.data;
 			lastPage = temp.length>0 ? lastPage+1 : lastPage;
 			$scope.isLoading = false;
@@ -184,6 +192,10 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		});
 	};
 
+	/*
+	 * @param {String} articleCategory
+	 * @return {String} URL for the category's feed page
+	 */
 	$scope.getUrlForCategory = function(articleCategory){
 		return '#/feed/'+categoryMapper.getCategoryId(articleCategory);
 	};
@@ -210,7 +222,10 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		});
 	};
 
-	$scope.getBookmarks();
+	$scope.bookmarkSummary = bookmarkService.getSummary({}, function(response){
+		console.log(response);
+	});
+	$scope.getBookmarksForCategory(currentCategory);
 	
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
@@ -229,6 +244,10 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			method: 'GET',
 			isArray: false
 		},
+		getSummary: {
+			method: 'GET',
+			url: 'api/v1/bookmark_count'
+		},
 		removeBookmark: {
 			method: 'DELETE'
 		}
@@ -236,7 +255,6 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 }]).factory('categoryMapper', function(){
 	return {
 		getCategoryId: function(category){
-			console.log(category);
 			switch(category){
 				case 'Self-help': return '1';
 				case 'Money': return '2';
@@ -245,6 +263,18 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 				case 'Lifestyle': return '5';
 				case 'Others': return '6';
 				default: return '0';
+			}
+		},
+		getCategoryNameForId: function(categoryId){
+			categoryId = Number(categoryId);
+			switch(categoryId){
+				case 0: return 'All';
+				case 1: return 'Self-help';
+				case 2: return 'Money';
+				case 3: return 'Tech';
+				case 5: return 'Lifestyle';
+				case 6: return 'Others';
+				default: return undefined;
 			}
 		}
 	};
