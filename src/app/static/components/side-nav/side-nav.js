@@ -1,13 +1,13 @@
 var sideNav = angular.module('sideNav', ['ngMaterial', 'ngMdIcons', 'facebook']);
 
-sideNav.directive('sideNav', ['$location', 'sidenavService', 'fbService', function($location, sidenavService, fbService){
+sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbService', function($location, $mdDialog, sidenavService, fbService){
 	return {
 		restrict: 'A',
 		templateUrl: '/static/components/side-nav/side-nav.html',
 		scope: {
 			page: '='
 		},
-		controller: function($scope, sidenavService, fbService){
+		controller: function($scope, $mdDialog, sidenavService, fbService){
 
 			$scope.$watch('page', function(newVal, oldVal, scope){
 				console.log(newVal);
@@ -19,6 +19,17 @@ sideNav.directive('sideNav', ['$location', 'sidenavService', 'fbService', functi
 			$scope.isLoggedIn = fbService.isLoggedIn;
 
 			// Event Handlers
+			$scope.onClickShare = function(){
+				fbService.share('http://tldr.sshz.org', function(response){
+					if(!angular.isDefined(response)){
+						$mdDialog.show($mdDialog.alert()
+							.clickOutsideToClose(true)
+							.title('Thanks for spreading the word!')
+							.ok('Ok'));
+					}
+				});
+			};
+
 			$scope.onMenuSelect = function(menu, view){
 				sidenavService.closeSidenav();
 				$scope.$emit('pageChange', menu);
