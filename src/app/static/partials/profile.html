@@ -18,7 +18,7 @@
 					Category: <a ng-href="{{article.categoryUrl}}">{{article.category}}</a><br>
 					Source: <a ng-href="{{article.url}}" target="_blank">{{article.source}}</a>
 				</p>
-				<ul class="collapsible" data-accordion="true" watch>
+				<ul class="collapsible z-depth-0" data-accordion="true" watch>
 					<li ng-repeat="point in article.bullets" post-repeat="initCollapsible">
 						<div class="collapsible-header">{{point.title}}</div>
 						<div class="collapsible-body"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
