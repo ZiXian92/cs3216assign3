@@ -1,4 +1,4 @@
-var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial']);
+var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'uiModel']);
 
 app.controller('mainController', ['$scope', '$location', 'sidenavService', function($scope, $location, sidenavService){
 
@@ -23,7 +23,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', function($scope, $location, $mdDialog, $mdToast, feedService, fbService, bookmarkService, categoryMapper){
+}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', function($scope, $location, $mdDialog, $mdToast, feedService, fbService, bookmarkService, categoryMapper, jobQueue){
 	var category = $location.path().split('/')[2];
 	category = category ? Number(category) : 0;
 	var lastPage = 1;
