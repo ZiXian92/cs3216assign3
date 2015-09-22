@@ -1,6 +1,6 @@
-var fb = angular.module('facebook', ['ngMaterial', 'ngRoute']);
+var fb = angular.module('facebook', []);
 
-fb.factory('fbService', ['$window', function($window){
+fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
 	var user = undefined;
 
 	// Initializing Facebook SDK
@@ -39,6 +39,7 @@ fb.factory('fbService', ['$window', function($window){
 				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
+					$rootScope.$apply();
 				});
 			}
 		});
@@ -99,40 +100,5 @@ fb.factory('fbService', ['$window', function($window){
 		login: login,
 		logout: logout,
 		share: share
-	};
-}]).directive('fbMenu', ['fbService', '$mdDialog', '$location', '$route', function(fbService, $mdDialog, $location, $route){
-	return {
-		restrict: 'A',
-		replace: true,
-		templateUrl: '/static/components/facebook/fb-menu.html',
-		controller: function($scope, fbService, $mdToast){
-			$scope.isLoggedIn = fbService.isLoggedIn;
-			$scope.login = function(){
-				fbService.login(function(){
-					$route.reload();
-					// $scope.$apply();
-					// window.location.reload();
-				});
-			};
-			$scope.logout = function(){
-				fbService.logout(function(){
-					$location.path('/');
-					$scope.$apply();
-					// window.location.href = '/';
-				});
-			};
-			$scope.share = function(){
-				fbService.share('http://tldr.sshz.org', function(response){
-					if(!angular.isDefined(response)){
-						$mdDialog.show($mdDialog.alert()
-							.clickOutsideToClose(true)
-							.title('Thanks for spreading the word!')
-							.ok('Ok'));
-					}
-				});
-			};
-		}, link: function(scope, element, attrs){
-
-		}
 	};
 }]);
