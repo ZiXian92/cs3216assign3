@@ -3,7 +3,7 @@ var module = angular.module('uiModel', []);
 module.factory('jobQueue', function(){
 	var q1 = [];
 	var q2 = [];
-	var interval = 500;	// Number of milliseconds between execution of consecutive jobs
+	var interval = 100;	// Number of milliseconds between execution of consecutive jobs
 	var timer = undefined;
 	var isRunning = false;
 
