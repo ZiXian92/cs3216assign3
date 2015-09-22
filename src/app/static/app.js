@@ -27,6 +27,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	var category = $location.path().split('/')[2];
 	category = category ? Number(category) : 0;
 	var lastPage = 1;
+	var isLastPage = false;
 
 	/*
 	 * @param {Object) article
@@ -56,6 +57,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	 * @param {Number=} category
 	 */
 	$scope.getArticles = function(category){
+		isLastPage = false;
 		$scope.isLoading = true;
 		if(window.navigator.onLine){
 			$scope.articles = feedService.getArticles(category, 1, function(){
@@ -72,7 +74,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	};
 
 	$scope.fetchMoreArticles = function(){
-		if($scope.isLoading){
+		if($scope.isLoading || isLastPage){
 			return;
 		}
 		$scope.isLoading = true;
@@ -86,6 +88,8 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 						$scope.articles.push(article);
 					});
 					window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
+				} else{
+					isLastPage = true;
 				}
 			});
 		} else{
@@ -151,6 +155,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	}
 
 	var lastPage = 1;
+	var isLastPage = false;
 
 	var currentCategory = '0';
 	$scope.isLoading = false;
@@ -162,6 +167,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	$scope.getBookmarksForCategory = function(category){
 		currentCategory = category;
 		lastPage = 1;
+		isLastPage = false;
 		$scope.isLoading = true;
 		bookmarkService.getBookmarks({category: category}, function(response){
 			$scope.articles = response.data;
@@ -175,7 +181,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 	$scope.getCategoryNameForId = categoryMapper.getCategoryNameForId;
 
 	$scope.getMoreBookmarks = function(){
-		if($scope.isLoading){
+		if($scope.isLoading || isLastPage){
 			return;
 		}
 		$scope.isLoading = true;
@@ -188,6 +194,8 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 					article.categoryUrl = $scope.getUrlForCategory(article.category);
 					$scope.articles.push(article);
 				});
+			} else{
+				isLastPage = true;
 			}
 		});
 	};

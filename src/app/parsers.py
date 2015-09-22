@@ -230,7 +230,7 @@ class MarcAndAngelParser(BaseParser):
                     if not title:
                         continue
 
-                    bullet = {'title': title.getText().strip(), 'details': refine(p.strip())}
+                    bullet = {'title': title.getText().strip(), 'details': [refine(p.strip())]}
                     bullets.append(bullet)
 
             return bullets
