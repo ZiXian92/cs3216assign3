@@ -55,9 +55,12 @@ class Trending(Resource):
     def get(self):
         try:
             days = int(request.args.get('days', 5))
+            page = int(request.args.get('page', 1))
         except ValueError:
             abort(400)
-        articles = models.Post.get_trending(days)
+        limit = 5
+        offset = (page - 1) * limit
+        articles = models.Post.get_trending(days, offset, limit)
         return prepare_feed(articles)
 
 
