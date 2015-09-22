@@ -4,7 +4,6 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 
 	// Methods
 	$scope.closeMenu = sidenavService.closeSidenav;
-
 	$scope.showMenu = sidenavService.openSidenav;
 
 	$scope.initCollapsible = function(){
@@ -23,7 +22,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', function($scope, $location, $mdDialog, $mdToast, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue){
+}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$route', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', function($scope, $location, $mdDialog, $mdToast, $route, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue){
 	var category = $routeParams.category;
 	if (category === undefined) {
 		category = 0;
@@ -32,6 +31,17 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	}
 	var lastPage = 1;
 	var isLastPage = false;
+
+	var promptReload = function(){
+		$mdDialog.show($mdDialog.confirm()
+			.title('Refresh content')
+			.content('You\'ve come back online. Would you like to get the latest articles?')
+			.ok('Yes, please')
+			.cancel('Not now')
+		).then(function(){
+			$route.reload();
+		});
+	};
 
 	/*
 	 * @param {Object) article
@@ -82,13 +92,6 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	};
 
 	/*
-	 * @param {Number} articleCategory
-	 */
-	$scope.getUrlForCategory = function(articleCategory){
-		return '#/feed/' + categoryMapper.getCategoryId(articleCategory);
-	};
-
-	/*
 	 * @param {Object} article
 	 */
 	$scope.onClickBookmarkForArticle = function(article){
@@ -125,13 +128,15 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	 * @param {String} url
 	 */
 	$scope.shareArticle = function(url){
-		fbService.share(url, function(){
-
-		});
+		fbService.share(url);
 	};
 
+	window.addEventListener('online', promptReload);
+	$scope.$on('$destroy', function(){
+		window.removeEventListener('online', promptReload);
+	});
 	$scope.getArticles(category);
-}]).controller('profileController', ['$scope', '$location', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', function($scope, $location, bookmarkService, categoryMapper, fbService, jobQueue){
+}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', function($scope, $location, $route, $mdDialog, bookmarkService, categoryMapper, fbService, jobQueue){
 	if(!fbService.isLoggedIn()){
 		$location.path('/');
 	}
@@ -142,6 +147,17 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	var currentCategory = '0';
 	$scope.isLoading = false;
 	$scope.user = fbService.getUser();
+
+	var promptReload = function(){
+		$mdDialog.show($mdDialog.confirm()
+			.title('Refresh content')
+			.content('You\'ve come back online. Would you like to get the latest articles?')
+			.ok('Yes, please')
+			.cancel('Not now')
+		).then(function(){
+			$route.reload();
+		});
+	};
 
 	/*
 	 * @param {String} category
@@ -179,11 +195,11 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	 */
 	$scope.removeBookmark = function(articleIndex){
 		var article = $scope.articles[articleIndex];
-		bookmarkService.removeBookmark(article.source, article.article_id, function(){
-			$scope.bookmarkSummary.total--;
-			$scope.bookmarkSummary.by_categories[categoryMapper.getCategoryId(article.category)]--;
-			$scope.articles.splice(articleIndex, 1);
-			// $scope.bookmarkSummary = bookmarkService.getSummary();
+		$scope.bookmarkSummary.total--;
+		$scope.bookmarkSummary.by_categories[categoryMapper.getCategoryId(article.category)]--;
+		$scope.articles.splice(articleIndex, 1);
+		jobQueue.addJob(function(){
+			bookmarkService.removeBookmark(article.source, article.article_id);
 		});
 	};
 
@@ -191,11 +207,13 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	 * @param {String} url
 	 */
 	$scope.shareArticle = function(url){
-		fbService.share(url, function(){
-
-		});
+		fbService.share(url);
 	};
 
+	window.addEventListener('online', promptReload);
+	$scope.$on('$destroy', function(){
+		window.removeEventListener('online', promptReload);
+	});
 	$scope.bookmarkSummary = bookmarkService.getSummary();
 	$scope.getBookmarksForCategory(currentCategory);
 
