@@ -1,16 +1,38 @@
-var titleBar = angular.module('titleBar', ['ngMaterial', 'sideNav', 'ngMdIcons', 'facebook']);
+var titleBar = angular.module('titleBar', ['ngMaterial', 'sideNav', 'ngMdIcons', 'facebook', 'ngRoute']);
 
-titleBar.directive('titleBar', ['sidenavService', function(sidenavService){
+titleBar.directive('titleBar', ['sidenavService', 'fbService', '$route', '$location', function(sidenavService, fbService, $route, $location){
 	return {
 		restrict: 'A',
 		templateUrl: '/static/components/title-bar/title-bar.html',
 		scope: true,
-		controller: function($scope, $location){
+		controller: function($scope, $location, fbService, $route, $location){
 			$scope.showSideBar = sidenavService.openSidenav;
+			$scope.isLoggedIn = fbService.isLoggedIn;
+
+			$scope.$watch(fbService.isLoggedIn, function(newVal, oldVal, scope){
+				scope.user = newVal ? fbService.getUser() : undefined;
+			});
 
 			$scope.onClickLogo = function(){
 				$location.path('/');
 			};
+
+			$scope.onClickLogin = function(){
+				fbService.login(function(){
+					$route.reload();
+				});
+			};
+
+			$scope.onClickLogout = function(){
+				fbService.logout(function(){
+					$location.path('/');
+					$scope.$apply();
+				});
+			};
+
+			if(fbService.isLoggedIn()){
+				$route.reload();
+			}
 		}, link: function(scope, element, attrs){
 			
 		}

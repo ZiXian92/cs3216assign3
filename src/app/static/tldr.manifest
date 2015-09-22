@@ -20,6 +20,7 @@ CACHE MANIFEST
 /static/partials/profile.html
 
 # CSS
+/static/css/about.css
 /static/css/feed.css
 /static/css/home.css
 /static/css/main.css

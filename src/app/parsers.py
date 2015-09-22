@@ -250,8 +250,10 @@ class MarcAndAngelParser(BaseParser):
     def map_category(cls, categories):
         for category in categories:
             category = category.lower()
-            if category in ['tech', 'life']:
+            if category in ['life']:
                 return 'Lifestyle'
+            if category in ['tech']:
+                return 'Technology'
             if category in ['money', 'career']:
                 return 'Money'
         return 'Others'
@@ -368,7 +370,7 @@ class NewserParser(BaseParser):
                     'id': cls.get_pid(link),
                     'url': link,
                     'title': title,
-                    'category': category,
+                    'category': cls.map_category([category]),
                     'source': cls.SOURCE_ID
                 })
 
@@ -376,6 +378,12 @@ class NewserParser(BaseParser):
 
     @classmethod
     def map_category(cls, categories):
+        for category in categories:
+            category = category.lower()
+            if category in ['tech']:
+                return 'Technology'
+            if category in ['money']:
+                return 'Money'
         return 'Others'
 
 

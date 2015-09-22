@@ -1,4 +1,4 @@
-var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'uiModel']);
+var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'facebook', 'uiModel']);
 
 app.controller('mainController', ['$scope', '$location', 'sidenavService', function($scope, $location, sidenavService){
 
