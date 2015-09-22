@@ -1,4 +1,4 @@
-<div class="container" infinite-scroll="getMoreBookmarks()" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
+<div class="container" infinite-scroll="getMoreBookmarks()" infinite-scroll-disabled="isLoading || isLastPage" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
 	<div layout="column" layout-align="start center" class="md-padding">
 		<img ng-src="{{user.image}}" class="circle" style="width: 100px; height: 100px">
 		<h5>{{user.name}}'s Bookmarks</h5>
@@ -45,7 +45,7 @@
 			</div>
 		</div>
 	</div>
-	<div layout="row" layout-align="space-around" ng-if="isLoading">
+	<div layout="row" layout-align="space-around" ng-show="isLoading">
 	    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 	</div>
 </div>

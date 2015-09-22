@@ -30,7 +30,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 		category = Number(category);
 	}
 	var lastPage = 1;
-	var isLastPage = false;
+	$scope.isLastPage = false;
 
 	var promptReload = function(){
 		$mdDialog.show($mdDialog.confirm()
@@ -58,7 +58,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	 * @param {Number=} category
 	 */
 	$scope.getArticles = function(category){
-		isLastPage = false;
+		$scope.isLastPage = false;
 		$scope.isLoading = true;
 		if(window.navigator.onLine){
 			$scope.articles = feedService.getArticles(category, 1, function(){
@@ -72,18 +72,18 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	};
 
 	$scope.fetchMoreArticles = function(){
-		if($scope.isLoading || isLastPage){
+		if($scope.isLoading || $scope.isLastPage){
 			return;
 		}
 		$scope.isLoading = true;
 		if(window.navigator.onLine){
 			var temp = feedService.getArticles(category, lastPage+1, function(){
 				lastPage = temp.length===0? lastPage: lastPage+1;
-				isLastPage = temp.length===0;
-				$scope.isLoading = false;
+				$scope.isLastPage = temp.length===0;
 				temp.forEach(function(article){
 					$scope.articles.push(article);
 				});
+				$scope.isLoading = false;
 				window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 			});
 		} else{
@@ -142,7 +142,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	}
 
 	var lastPage = 1;
-	var isLastPage = false;
+	$scope.isLastPage = false;
 
 	var currentCategory = '0';
 	$scope.isLoading = false;
@@ -165,7 +165,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	$scope.getBookmarksForCategory = function(category){
 		currentCategory = category;
 		lastPage = 1;
-		isLastPage = false;
+		$scope.isLastPage = false;
 		$scope.isLoading = true;
 		if(window.navigator.onLine){
 			var temp = bookmarkService.getBookmarks(category, 1, function(){
@@ -182,7 +182,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	$scope.getCategoryNameForId = categoryMapper.getCategoryNameForId;
 
 	$scope.getMoreBookmarks = function(){
-		if(window.navigator.offLine || $scope.isLoading || isLastPage){
+		if(window.navigator.offLine || $scope.isLoading || $scope.isLastPage){
 			return;
 		}
 		$scope.isLoading = true;
@@ -191,7 +191,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 				$scope.articles.push(article);
 			});
 			lastPage = temp.data.length>0 ? lastPage+1 : lastPage;
-			isLastPage = temp.data.length===0;
+			$scope.isLastPage = temp.data.length===0;
 			window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
 			$scope.isLoading = false;
 		});

@@ -1,6 +1,4 @@
-<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
-
-<div ng-if="articles.length===0 && !isLoading">No articles found for this category.</div>
+<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-disabled="isLoading || isLastPage" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
 <div class="row" ng-repeat="article in articles">
 	<div class="col s12">
 		<div class="card">
@@ -40,8 +38,9 @@
 		</div>
 	</div>
 </div>
-<div layout="row" layout-align="space-around" ng-if="isLoading">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+<div layout="row" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate" ng-show="isLoading"></md-progress-circular>
+	<p ng-show="!isLoading">Wow, you have reached the end of this category!</p>
 </div>
 </div>
 <link rel="stylesheet" href="/static/css/feed.css">
