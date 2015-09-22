@@ -72,7 +72,7 @@ class Bookmarks(Resource):
             category = int(request.args.get('category', 0))
         except ValueError:
             abort(400)
-        bookmarked_articles = g.user.bookmark_articles
+        bookmarked_articles = list(reversed(g.user.bookmark_articles))
         if category > 0:
             bookmarked_articles = [_ for _ in bookmarked_articles if _.categories[0].id == category]
         return {'total': len(bookmarked_articles),
