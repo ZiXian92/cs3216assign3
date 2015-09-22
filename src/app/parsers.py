@@ -244,10 +244,10 @@ class MarcAndAngelParser(BaseParser):
     def map_category(cls, categories):
         for category in categories:
             category = category.lower()
-            if category in ['money', 'tech', 'life']:
+            if category in ['tech', 'life']:
                 return 'Lifestyle'
-            if category in ['career']:
-                return 'Work'
+            if category in ['money', 'career']:
+                return 'Money'
         return 'Others'
 
     @classmethod
