@@ -339,14 +339,31 @@ class NewserParser(BaseParser):
 
     @classmethod
     def crawl(cls):
-        return [{
-                    'id': '0',
-                    'title': 'Dummy Title',
-                    'category': cls.map_category(['Category One', 'Category Two']),
-                    'image': '',
-                    'create_time': datetime(1970, 1, 1),
+        categories = {
+            'money': 'http://rss.newser.com/rss/section/5.rss',
+            'tech': 'http://rss.newser.com/rss/section/7.rss',
+        }
+        posts = []
+
+        for category in categories:
+            url = categories[category]
+            request = requests.get(url)
+            if request.status_code != 200:
+                continue
+            html = BeautifulSoup(request.text)
+            items = html.findAll('item')
+            for item in items:
+                title = item.find('title').getText().strip()
+                link = item.find('link').getText()
+                posts.append({
+                    'id': cls.get_pid(link),
+                    'url': link,
+                    'title': title,
+                    'category': category,
                     'source': cls.SOURCE_ID
-                }]
+                })
+
+        return posts
 
     @classmethod
     def map_category(cls, categories):
