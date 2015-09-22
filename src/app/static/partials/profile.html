@@ -3,7 +3,7 @@
 		<img ng-src="{{user.image}}" class="circle" style="width: 100px; height: 100px">
 		<h5>{{user.name}}'s Bookmarks</h5>
 	</div>
-	<md-tabs md-selected="1">
+	<md-tabs ng-if="bookmarkSummary.total != undefined">
 		<md-tab label="All({{bookmarkSummary.total}})" md-on-select="getBookmarksForCategory('0')"></md-tab>
 		<md-tab ng-repeat="(category, count) in bookmarkSummary.by_categories" label="{{getCategoryNameForId(category)}}({{count}})" md-on-select="getBookmarksForCategory(category)"></md-tab>
 	</md-tabs>
