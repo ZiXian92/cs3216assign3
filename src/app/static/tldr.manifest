@@ -29,6 +29,7 @@ CACHE MANIFEST
 
 # JS
 /static/js/materialize.min.js
+/static/js/ui-model.js
 
 # Images
 /static/images/1st-01.png
