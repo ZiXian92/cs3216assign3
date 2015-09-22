@@ -167,16 +167,22 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 		lastPage = 1;
 		isLastPage = false;
 		$scope.isLoading = true;
-		var temp = bookmarkService.getBookmarks(category, 1, function(){
-			$scope.articles = temp.data;
+		if(window.navigator.onLine){
+			var temp = bookmarkService.getBookmarks(category, 1, function(){
+				$scope.articles = temp.data;
+				$scope.isLoading = false;
+				window.localStorage.setItem('bookmark'+category, JSON.stringify($scope.articles));
+			});
+		} else{
+			$scope.articles = JSON.parse(window.localStorage.getItem('bookmark'+category));
 			$scope.isLoading = false;
-		});
+		}
 	};
 
 	$scope.getCategoryNameForId = categoryMapper.getCategoryNameForId;
 
 	$scope.getMoreBookmarks = function(){
-		if($scope.isLoading || isLastPage){
+		if(window.navigator.offLine || $scope.isLoading || isLastPage){
 			return;
 		}
 		$scope.isLoading = true;
@@ -186,6 +192,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 			});
 			lastPage = temp.data.length>0 ? lastPage+1 : lastPage;
 			isLastPage = temp.data.length===0;
+			window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
 			$scope.isLoading = false;
 		});
 	};
@@ -198,6 +205,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 		$scope.bookmarkSummary.total--;
 		$scope.bookmarkSummary.by_categories[categoryMapper.getCategoryId(article.category)]--;
 		$scope.articles.splice(articleIndex, 1);
+		window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
 		jobQueue.addJob(function(){
 			bookmarkService.removeBookmark(article.source, article.article_id);
 		});

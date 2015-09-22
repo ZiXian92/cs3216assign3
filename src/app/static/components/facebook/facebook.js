@@ -22,12 +22,14 @@ fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
 				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
+					$window.localStorage.setItem('user', JSON.stringify(user));
 				});
 			}
 		});
 
 		FB.Event.subscribe('auth.logout', function(response){
 			user = undefined;
+			$window.localStorage.removeItem('user');
 		});
 
 		FB.getLoginStatus(function(response){
@@ -39,18 +41,41 @@ fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
 				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
+					$window.localStorage.setItem('user', JSON.stringify(user));
 					$rootScope.$apply();
 				});
 			}
 		});
 	};
-	(function(d, s, id){
+
+	var initSdk = function(d, s, id){
 		var js, fjs = d.getElementsByTagName(s)[0];
 	    if (d.getElementById(id)) {return;}
 	    js = d.createElement(s); js.id = id;
 	    js.src = "//connect.facebook.net/en_US/sdk.js";
 	    fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
+	};
+
+	$window.addEventListener('online', function(){
+		if(!angular.isDefined(FB)){
+			initSdk(document, 'script', 'facebook-jssdk');
+		}
+	});
+
+	if($window.navigator.onLine){
+		initSdk(document, 'script', 'facebook-jssdk');
+	} else{
+		var temp = JSON.parse($window.localStorage.getItem('user'));
+		user = angular.isObject(temp) ? temp : undefined;
+	}
+
+	// (function(d, s, id){
+	// 	var js, fjs = d.getElementsByTagName(s)[0];
+	//     if (d.getElementById(id)) {return;}
+	//     js = d.createElement(s); js.id = id;
+	//     js.src = "//connect.facebook.net/en_US/sdk.js";
+	//     fjs.parentNode.insertBefore(js, fjs);
+	// }(document, 'script', 'facebook-jssdk'));
 	
 	// Method definitions
 	var getUser = function(){
