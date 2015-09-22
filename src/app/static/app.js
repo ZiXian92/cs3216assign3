@@ -23,9 +23,13 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 			height: 300
 		});
 	});
-}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', function($scope, $location, $mdDialog, $mdToast, feedService, fbService, bookmarkService, categoryMapper, jobQueue){
-	var category = $location.path().split('/')[2];
-	category = category ? Number(category) : 0;
+}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', function($scope, $location, $mdDialog, $mdToast, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue){
+	var category = $routeParams.category;
+	if (category === undefined) {
+		category = 0;
+	} else if (category !== 'popular') {
+		category = Number(category);
+	}
 	var lastPage = 1;
 	var isLastPage = false;
 
@@ -237,7 +241,7 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', funct
 		console.log(response);
 	});
 	$scope.getBookmarksForCategory(currentCategory);
-	
+
 }]).factory('articleService', ['$resource', function($resource){
 	return $resource('', {}, {
 		getAllArticles: {

@@ -44,7 +44,7 @@ sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbSer
 			}, {
 				'title': 'Popular Articles',
 				'iid': 'popular',
-				'view': '/feed',
+				'view': '/feed/popular',
 				'icon': 'trending_up'
 			}, {
 				'title': 'Money',
