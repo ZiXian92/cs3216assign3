@@ -71,6 +71,8 @@ class LifeHackParser(BaseParser):
             poster = html.find('figure', class_='poster')
             if poster:
                 image_tag = poster.find('img')
+                if not image_tag:
+                    return None
                 image_str = image_tag['data-bttrlazyloading-md']
                 for extension in ['jpg', 'png']:
                     end_index = image_str.find('.' + extension)
