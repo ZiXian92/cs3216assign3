@@ -126,6 +126,11 @@ class BookmarksCount(Resource):
         return {'total': len(bookmark_articles), 'by_categories': result_by_categories}
 
 
+class Feedback(Resource):
+    def post(self):
+        return 'OK'
+
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -155,3 +160,4 @@ api.add_resource(BookmarksCount, '/bookmark_count')
 api.add_resource(Categories, '/categories')
 api.add_resource(Trending, '/feed/popular')
 api.add_resource(Feed, '/feed/<int:category_id>')
+api.add_resource(Feedback, '/feedback')

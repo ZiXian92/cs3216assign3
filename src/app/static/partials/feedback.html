@@ -1,0 +1,23 @@
+<div class="container">
+	<p class="flow-text">
+		Want to read the website you like on tl;dr? Or any other suggestions?
+	</p>
+	<md-content>
+		<form name="feedbackForm">
+			<md-input-container flex>
+				<label>URL of Website</label>
+				<input ng-model="feedback.url">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Any Comments?</label>
+				<textarea ng-model="feedback.comments" columns="3"></textarea>
+			</md-input-container>
+			<md-input-container flex>
+				<md-button class="md-raised md-primary" ng-click="submitFeedback()"
+						   ng-disabled="!(feedback.url || feedback.comments)">
+					Submit
+				</md-button>
+			</md-input-container>
+		</form>
+	</md-content>
+</div>

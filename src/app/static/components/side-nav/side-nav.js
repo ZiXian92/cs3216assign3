@@ -76,6 +76,11 @@ sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbSer
 				'iid': 'about',
 				'view': '/about',
 				'icon': 'info'
+			}, {
+				'title': 'Feedback to tl;dr',
+				'iid': 'feedback',
+				'view': '/feedback',
+				'icon': 'rate_review'
 			}];
 		},
 		link: function(scope, element, attrs){

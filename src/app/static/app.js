@@ -25,6 +25,28 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 
 	storageUpdateService.update();
 
+}]).controller('feedbackController', ['$scope', '$mdDialog', 'feedbackService', function($scope, $mdDialog, feedbackService) {
+	var emptyFeedback = {
+		url: '',
+		comments: ''
+	};
+	$scope.feedback |= emptyFeedback;
+	$scope.submitFeedback = function () {
+		feedbackService.submit($scope.feedback, function(response) {
+			$scope.feedback = emptyFeedback;
+			$mdDialog.show($mdDialog.alert()
+				.clickOutsideToClose(true)
+				.title('Thank you!')
+				.content('Your feedback is noted down.')
+				.ok('Ok'));
+		}, function(reponse) {
+			$mdDialog.show($mdDialog.alert()
+				.clickOutsideToClose(true)
+				.title('Oops')
+				.content('We have some problem saving your feedback.')
+				.ok('Ok'));
+		});
+	}
 }]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$route', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', 'storageService', function($scope, $location, $mdDialog, $mdToast, $route, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue, storageService){
 	var category = $routeParams.category;
 	if (category === undefined) {
@@ -272,6 +294,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			method: 'DELETE'
 		}
 	});
+}]).factory('feedbackService', ['$resource', function($resource){
+	return $resource('/api/v1/feedback', {}, {
+		submit: {
+			method: 'POST'
+		}
+	});
 }]).factory('bookmarkService', ['bookmarkApiService', 'categoryMapper', function(bookmarkApiService, categoryMapper){
 
 	/*
@@ -446,6 +474,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		templateUrl: '/static/partials/home.html'
 	}).when('/about', {
 		templateUrl: '/static/partials/about.html'
+	}).when('/feedback', {
+		templateUrl: '/static/partials/feedback.html',
+		controller: 'feedbackController'
 	}).when('/feed', {
 		templateUrl: '/static/partials/feed.html',
 		controller: 'feedController'
