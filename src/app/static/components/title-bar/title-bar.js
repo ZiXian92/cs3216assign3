@@ -1,11 +1,11 @@
 var titleBar = angular.module('titleBar', ['ngMaterial', 'sideNav', 'ngMdIcons', 'facebook', 'ngRoute']);
 
-titleBar.directive('titleBar', ['sidenavService', 'fbService', '$route', '$location', function(sidenavService, fbService, $route, $location){
+titleBar.directive('titleBar', ['sidenavService', 'fbService', '$route', '$location', '$mdDialog', function(sidenavService, fbService, $route, $location, $mdDialog){
 	return {
 		restrict: 'A',
 		templateUrl: '/static/components/title-bar/title-bar.html',
 		scope: true,
-		controller: function($scope, $location, fbService, $route, $location){
+		controller: function($scope, $location, fbService, $route, $location, $mdDialog){
 			$scope.showSideBar = sidenavService.openSidenav;
 			$scope.isLoggedIn = fbService.isLoggedIn;
 
@@ -24,9 +24,16 @@ titleBar.directive('titleBar', ['sidenavService', 'fbService', '$route', '$locat
 			};
 
 			$scope.onClickLogout = function(){
-				fbService.logout(function(){
-					$location.path('/');
-					$scope.$apply();
+				$mdDialog.show($mdDialog.confirm()
+					.title('Logging out')
+					.content('Are you sure to log out now?')
+					.ok('Yes')
+					.cancel('Not now')
+				).then(function(){
+					fbService.logout(function(){
+						$location.path('/');
+						$scope.$apply();
+					});
 				});
 			};
 
