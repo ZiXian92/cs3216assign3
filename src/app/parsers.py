@@ -87,6 +87,17 @@ class LifeHackParser(BaseParser):
                 if element.name == 'h2' or not element.nextSibling:
                     break
                 element = element.nextSibling
+
+            if len(headlines) == 0:
+                content = post_content.getText().strip()
+                sentence_count = 0
+                for i in range(0, len(content)):
+                    if content[i] in '.!?':
+                        sentence_count += 1
+                        if sentence_count == 5:
+                            headlines.append(content[:i + 1])
+                            break
+
             return [_ for _ in headlines if _]
 
         def parse_bullets():
