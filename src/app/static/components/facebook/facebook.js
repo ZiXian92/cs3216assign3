@@ -1,6 +1,6 @@
 var fb = angular.module('facebook', []);
 
-fb.factory('fbService', ['$window', '$rootScope', 'storageService', function($window, $rootScope){
+fb.factory('fbService', ['$window', '$rootScope', 'storageService', function($window, $rootScope, storageService){
 	var user = undefined;
 
 	// Initializing Facebook SDK
