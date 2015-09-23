@@ -1,6 +1,6 @@
 var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'facebook', 'uiModel']);
 
-app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQueue', function($scope, $location, sidenavService, jobQueue){
+app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'jobQueue', function($scope, $location, sidenavService, jobQueue){
 
 	// Methods
 	$scope.closeMenu = sidenavService.closeSidenav;
@@ -14,6 +14,13 @@ app.controller('mainController', ['$scope', '$location', 'sidenavService', 'jobQ
 	$scope.$on('pageChange', function(event, newPage){
 		$scope.page = newPage;
 		console.log($scope.page);
+	});
+
+	// Clears bookmarks when user changes
+	$scope.$on($window.localStorage.getItem('user'), function(newVal, oldVal, scope){
+		for(var i=0; i<7; i++){
+			$window.localStorage.removeItem('bookmark'+i);
+		}
 	});
 
 }]).controller('homeController', ['$scope', function($scope){
