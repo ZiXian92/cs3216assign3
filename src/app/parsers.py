@@ -304,7 +304,8 @@ class NewserParser(BaseParser):
     SOURCE_ID = 'newser'
 
     @classmethod
-    def parse_post(cls, url):
+    def parse_post(cls, id):
+        url = cls.get_url(id)
         request = requests.get(url)
         if request.status_code != 200:
             raise ParserException()
@@ -331,22 +332,22 @@ class NewserParser(BaseParser):
 
         return {
             'title': title,
-            'image_url': image_url,
+            'image': image_url,
             'headlines': headlines,
             'bullets': parse_bullets(),
-            'url': url,
             'category': cls.map_category([]),
-            'id': cls.get_pid(url),
+            'id': id,
             'source': cls.SOURCE_ID
         }
 
     @classmethod
     def get_pid(cls, url):
-        return url.split('/')[4]
+        parts = url.split('/')
+        return parts[4] + '_' + parts[5][:len(parts[5]) - 5]
 
     @classmethod
     def get_url(cls, pid):
-        return ''
+        return 'http://www.newser.com/story/' + pid.replace('_', '/') + '.html'
 
     @classmethod
     def crawl(cls):
@@ -368,7 +369,6 @@ class NewserParser(BaseParser):
                 link = item.find('link').getText()
                 posts.append({
                     'id': cls.get_pid(link),
-                    'url': link,
                     'title': title,
                     'category': cls.map_category([category]),
                     'source': cls.SOURCE_ID
