@@ -56,4 +56,121 @@ module.factory('jobQueue', function(){
 	return {
 		addJob: enqueueJob
 	};
-});
+}).factory('storageService', ['$window', function($window){
+
+	var updated = {
+		'0': false,
+		'1': false,
+		'2': false,
+		'3': false,
+		'4': false,
+		'5': false,
+		'6': false,
+		'popular': false,
+		'bookmark0': false,
+		'bookmark1': false,
+		'bookmark2': false,
+		'bookmark3': false,
+		'bookmark4': false,
+		'bookmark5': false,
+		'bookmark6': false
+	};
+
+	var clearUser = function(){
+		$window.localStorage.removeItem('user');
+	};
+
+	/*
+	 * @param {String} category
+	 * @return {Object?}
+	 */
+	var getArticlesForCategory = function(category){
+		return JSON.parse($window.localStorage.getItem(category));
+	};
+
+	/*
+	 * @param {String} category
+	 * @return {Object?}
+	 */
+	var getBookmarksForCategory = function(category){
+		return JSON.parse($window.localStorage.getItem('bookmark'+category));
+	};
+
+	/*
+	 * @return {Object?}
+	 */
+	var getBookmarkSummary = function(){
+		return $window.localStorage.getItem('bookmarkSummary');
+	};
+
+	/*
+	 * @return {Object?}
+	 */
+	var getUser = function(){
+		return JSON.parse($window.localStorage.getItem('user'));
+	};
+
+	/*
+	 * @param {String} category
+	 */
+	var isUpdatedBookmarkCategory = function(category){
+		return updated['bookmark'+category];
+	};
+
+	/*
+	 * @param {String} category
+	 */
+	var isUpdatedCategory = function(category){
+		return updated[category];
+	};
+
+	/*
+	 * @param {String} category
+	 * @param {Array<Object>} articles
+	 */
+	var setArticlesForCategory = function(category, articles){
+		$window.localStorage.setItem(category, JSON.stringify(articles));
+		updated[category] = true;
+	};
+
+	/*
+	 * @param {String} category
+	 * @param {Array<Object>} bookmarks
+	 */
+	var setBookmarksForCategory = function(category, bookmarks){
+		$window.localStorage.setItem('bookmark'+category, JSON.stringify(bookmarks));
+		updated['bookmark+category'] = true;
+	};
+
+	/*
+	 * @param {Object} summary*/
+	var setBookmarkSummary = function(summary){
+		$window.localStorage.setItem('bookmarkSummary', JSON.stringify(summary));
+	};
+
+	/*
+	 * @param {{
+					id: String,
+					image: String,
+					name: String,
+					token: String
+				}} user
+	 */
+	var setUser = function(user){
+		$window.localStorage.setItem('user', JSON.stringify(user));
+	};
+
+	return {
+		clearUser: clearUser,
+		getArticlesForCategory: getArticlesForCategory,
+		getBookmarksForCategory: getBookmarksForCategory,
+		getBookmarkSummary: getBookmarkSummary,
+		getUser: getUser,
+		isUpdatedBookmarkCategory: isUpdatedBookmarkCategory,
+		isUpdatedCategory: isUpdatedCategory,
+		setArticlesForCategory: setArticlesForCategory,
+		setBookmarksForCategory: setBookmarksForCategory,
+		setBookmarkSummary: setBookmarkSummary,
+		setUser: setUser
+	};
+}]);

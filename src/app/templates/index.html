@@ -8,12 +8,10 @@
     <link rel="apple-touch-startup-image" media="screen" href="/static/images/splash.png"/>
     <title>tl;dr</title>
     <script>
-      window.addEventListener('load', function(){
-        window.applicationCache.addEventListener('updateready', function(){
-          console.log('Updating app');
-          window.applicationCache.swapCache();
-          window.location.reload();
-        });
+      window.applicationCache.addEventListener('updateready', function(){
+        console.log('Updating app');
+        window.applicationCache.swapCache();
+        window.location.reload();
       });
     </script>
 </head>

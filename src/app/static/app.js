@@ -1,6 +1,6 @@
 var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'facebook', 'uiModel']);
 
-app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'jobQueue', function($scope, $location, $window, sidenavService, jobQueue){
+app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'storageUpdateService', function($scope, $location, $window, sidenavService, storageUpdateService){
 
 	// Methods
 	$scope.closeMenu = sidenavService.closeSidenav;
@@ -23,13 +23,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		}
 	});
 
-}]).controller('homeController', ['$scope', function($scope){
-	$(document).ready(function(){
-		$('.slider').slider({
-			height: 300
-		});
-	});
-}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$route', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', function($scope, $location, $mdDialog, $mdToast, $route, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue){
+	storageUpdateService.update();
+
+}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$route', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', 'storageService', function($scope, $location, $mdDialog, $mdToast, $route, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue, storageService){
 	var category = $routeParams.category;
 	if (category === undefined) {
 		category = 0;
@@ -39,15 +35,20 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	var lastPage = 1;
 	$scope.isLastPage = false;
 
-	var promptReload = function(){
-		$mdDialog.show($mdDialog.confirm()
-			.title('Refresh content')
-			.content('You\'ve come back online. Would you like to get the latest articles?')
-			.ok('Yes, please')
-			.cancel('Not now')
-		).then(function(){
-			$route.reload();
-		});
+	// var promptReload = function(){
+	// 	$mdDialog.show($mdDialog.confirm()
+	// 		.title('Refresh content')
+	// 		.content('You\'ve come back online. Would you like to get the latest articles?')
+	// 		.ok('Yes, please')
+	// 		.cancel('Not now')
+	// 	).then(function(){
+	// 		$route.reload();
+	// 	});
+	// };
+
+	// Updates article list when app goes back online
+	var onOnline = function(){
+		$scope.getArticles(category);
 	};
 
 	/*
@@ -70,10 +71,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		if(window.navigator.onLine){
 			$scope.articles = feedService.getArticles(category, 1, function(){
 				$scope.isLoading = false;
-				window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
+				// window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
+				storageService.setArticlesForCategory(String(category), $scope.articles);
 			});
 		} else{
-			$scope.articles = JSON.parse(window.localStorage.getItem(String(category)));
+			// $scope.articles = JSON.parse(window.localStorage.getItem(String(category)));
+			$scope.articles = storageService.getArticlesForCategory(String(category));
 			$scope.isLoading = false;
 		}
 	};
@@ -90,8 +93,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				temp.forEach(function(article){
 					$scope.articles.push(article);
 				});
+				storageService.setArticlesForCategory(String(category), $scope.articles);
 				$scope.isLoading = false;
-				window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
+				// window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 			});
 		} else{
 			$scope.isLoading = false;
@@ -138,12 +142,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		fbService.share(url);
 	};
 
-	window.addEventListener('online', promptReload);
+	window.addEventListener('online', onOnline);
 	$scope.$on('$destroy', function(){
-		window.removeEventListener('online', promptReload);
+		window.removeEventListener('online', onOnline);
 	});
 	$scope.getArticles(category);
-}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', function($scope, $location, $route, $mdDialog, bookmarkService, categoryMapper, fbService, jobQueue){
+}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', 'storageService', function($scope, $location, $route, $mdDialog, bookmarkService, categoryMapper, fbService, jobQueue, storageService){
 	if(!fbService.isLoggedIn()){
 		$location.path('/');
 	}
@@ -155,15 +159,24 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	$scope.isLoading = false;
 	$scope.user = fbService.getUser();
 
-	var promptReload = function(){
-		$mdDialog.show($mdDialog.confirm()
-			.title('Refresh content')
-			.content('You\'ve come back online. Would you like to get the latest articles?')
-			.ok('Yes, please')
-			.cancel('Not now')
-		).then(function(){
-			$route.reload();
+	// var promptReload = function(){
+	// 	$mdDialog.show($mdDialog.confirm()
+	// 		.title('Refresh content')
+	// 		.content('You\'ve come back online. Would you like to get the latest articles?')
+	// 		.ok('Yes, please')
+	// 		.cancel('Not now')
+	// 	).then(function(){
+	// 		$route.reload();
+	// 	});
+	// };
+
+	// Update function triggered when app goes back online
+	var onOnline = function(){
+		var tempSummary = bookmarkService.getSummary(function(){
+			$scope.bookmarkSummary = tempSummary;
 		});
+
+		$scope.getBookmarksForCategory(currentCategory);
 	};
 
 	/*
@@ -178,10 +191,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			var temp = bookmarkService.getBookmarks(category, 1, function(){
 				$scope.articles = temp.data;
 				$scope.isLoading = false;
-				window.localStorage.setItem('bookmark'+category, JSON.stringify($scope.articles));
+				storageService.setBookmarksForCategory(category, $scope.articles);
+				// window.localStorage.setItem('bookmark'+category, JSON.stringify($scope.articles));
 			});
 		} else{
-			$scope.articles = JSON.parse(window.localStorage.getItem('bookmark'+category));
+			// $scope.articles = JSON.parse(window.localStorage.getItem('bookmark'+category));
+			$scope.articles = storageServie.getBookmarksForCategory(category);
 			$scope.isLoading = false;
 		}
 	};
@@ -199,7 +214,8 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			});
 			lastPage = temp.data.length>0 ? lastPage+1 : lastPage;
 			$scope.isLastPage = temp.data.length===0;
-			window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
+			// window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
+			storageService.setBookmarksForCategory(currentCategory, $scope.articles);
 			$scope.isLoading = false;
 		});
 	};
@@ -212,7 +228,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		$scope.bookmarkSummary.total--;
 		$scope.bookmarkSummary.by_categories[categoryMapper.getCategoryId(article.category)]--;
 		$scope.articles.splice(articleIndex, 1);
-		window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
+		// window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
+		storageService.setBookmarksForCategory(currentCategory, $scope.articles);
+		storageService.setBookmarkSummary($scope.bookmarkSummary);
 		jobQueue.addJob(function(){
 			bookmarkService.removeBookmark(article.source, article.article_id);
 		});
@@ -225,11 +243,11 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		fbService.share(url);
 	};
 
-	window.addEventListener('online', promptReload);
+	window.addEventListener('online', onOnline);
 	$scope.$on('$destroy', function(){
-		window.removeEventListener('online', promptReload);
+		window.removeEventListener('online', onOnline);
 	});
-	$scope.bookmarkSummary = bookmarkService.getSummary();
+	$scope.bookmarkSummary = (window.navigator.onLine ? bookmarkService.getSummary() : storageService.getBookmarkSummary());
 	$scope.getBookmarksForCategory(currentCategory);
 
 }]).factory('articleService', ['$resource', function($resource){
@@ -298,10 +316,19 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	};
 
 	/*
+	 * @param {function()=} completion
 	 * @return {{by_categories: Object, total: Number}}
 	 */
-	var getBookmarksSummary = function(){
-		return bookmarkApiService.getSummary();
+	var getBookmarksSummary = function(completion){
+		return bookmarkApiService.getSummary({}, function(){
+			if(angular.isFunction(completion)){
+				completion();
+			}
+		}, function(){
+			if(angular.isFunction(completion)){
+				completion();
+			}
+		});
 	};
 
 	/*
@@ -380,6 +407,35 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	return {
 		getArticles: getArticles
 	};
+}]).factory('storageUpdateService', ['bookmarkService', 'feedService', 'jobQueue', 'storageService', function(bookmarkService, feedService, jobQueue, storageService){
+	var categories = ['0', '1', '2', '3', '5', '6', 'popular'];
+	var bookmarkCategories = ['0'];
+
+	var update = function(){
+		categories.forEach(function(category){
+			jobQueue.addJob(function(){
+				var articles = feedService.getArticles(category, 1, function(){
+					if(!storageService.isUpdatedCategory(category)){
+						storageService.setArticlesForCategory(category, articles);
+					}
+				});
+				var bookmarks = bookmarkService.getBookmarks(category, 1, function(){
+					if(!storageService.isUpdatedBookmarkCategory(category)){
+						storageService.setBookmarksForCategory(category, bookmarks.data);
+					}
+				});
+			});
+		});
+		jobQueue.addJob(function(){
+			var summary = bookmarkService.getSummary(function(){
+				storageService.setBookmarkSummary(summary);
+			});
+		});
+	};
+
+	return {
+		update: update
+	};
 }]).directive('postRepeat', function(){
 	return function(scope, element, attrs){
 		scope.$watch(attrs.postRepeat, function(callback){
@@ -390,8 +446,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	};
 }).config(['$routeProvider', function($routeProvider){
 	$routeProvider.when('/', {
-		templateUrl: '/static/partials/home.html',
-		controller: 'homeController'
+		templateUrl: '/static/partials/home.html'
 	}).when('/about', {
 		templateUrl: '/static/partials/about.html'
 	}).when('/feed', {
