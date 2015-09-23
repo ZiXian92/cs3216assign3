@@ -12,6 +12,11 @@
 				<ng-md-icon icon="facebook-box" style="fill: white" size="30"></ng-md-icon>
 			</div>
 		</md-button>
+		<md-button ng-click="onClickRefresh()">
+			<md-icon>
+				<ng-md-icon icon="refresh" style="fill: white" size="24"></ng-md-icon>
+			</md-icon>
+		</md-button>
 		<md-button ng-click="onClickLogout()" ng-if="isLoggedIn()">
 			Logout
 			<img ng-src="{{ user.image }}" class="fb-profile-image">

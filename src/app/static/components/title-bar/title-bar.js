@@ -30,6 +30,10 @@ titleBar.directive('titleBar', ['sidenavService', 'fbService', '$route', '$locat
 				});
 			};
 
+			$scope.onClickRefresh = function(){
+				window.location.reload();
+			};
+
 			if(fbService.isLoggedIn()){
 				$route.reload();
 			}
