@@ -1,6 +1,6 @@
 var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'facebook', 'uiModel']);
 
-app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'jobQueue', function($scope, $location, sidenavService, jobQueue){
+app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'jobQueue', function($scope, $location, $window, sidenavService, jobQueue){
 
 	// Methods
 	$scope.closeMenu = sidenavService.closeSidenav;
