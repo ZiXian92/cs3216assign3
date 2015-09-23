@@ -3,14 +3,14 @@
 		<md-button class="md-icon-button" aria-label="menu" ng-click="showSideBar()">
 			<ng-md-icon icon="menu" style="fill: white" size="36" class="menu-icon"></ng-md-icon>
 		</md-button>
-		<span flex></span>
-		<img src="/static/images/logo.png" class="title-bar-logo" ng-click="onClickLogo()">
-		<span flex></span>
-		<md-button ng-click="onClickRefresh()" class="md-icon-button">
+		<md-button ng-click="onClickRefresh()" class="refresh-icon">
 			<md-icon>
 				<ng-md-icon icon="refresh" style="fill: white" size="24"></ng-md-icon>
 			</md-icon>
 		</md-button>
+		<span flex></span>
+		<img src="/static/images/logo.png" class="title-bar-logo" ng-click="onClickLogo()">
+		<span flex></span>
 		<md-button ng-click="onClickLogin()" ng-if="!isLoggedIn()">
 			Login
 			<div class="fb-login-icon">
