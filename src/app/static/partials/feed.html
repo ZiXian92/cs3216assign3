@@ -24,14 +24,12 @@
 					<md-icon>
 						<ng-md-icon icon="{{ article.bookmarked ? 'bookmark' : 'bookmark_outline'}}" style="fill: black"
 									size="24"></ng-md-icon>
-						<md-tooltip>{{ article.bookmarked ? 'Bookmarked' : 'Bookmark this article'}}</md-tooltip>
 					</md-icon>
 					<span style="position: absolute">+{{ article.bookmarks }}</span>
 				</md-button>
 				<md-button flex class="article-action-button" ng-click="shareArticle(article.url)">
 					<md-icon>
 						<ng-md-icon icon="share" style="fill: black" size="24"></ng-md-icon>
-						<md-tooltip>Share this article on Facebook</md-tooltip>
 					</md-icon>
 				</md-button>
 			</div>
