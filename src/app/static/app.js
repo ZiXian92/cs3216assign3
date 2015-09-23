@@ -71,11 +71,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		if(window.navigator.onLine){
 			$scope.articles = feedService.getArticles(category, 1, function(){
 				$scope.isLoading = false;
-				// window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 				storageService.setArticlesForCategory(String(category), $scope.articles);
 			});
 		} else{
-			// $scope.articles = JSON.parse(window.localStorage.getItem(String(category)));
 			$scope.articles = storageService.getArticlesForCategory(String(category));
 			$scope.isLoading = false;
 		}
@@ -95,7 +93,6 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				});
 				storageService.setArticlesForCategory(String(category), $scope.articles);
 				$scope.isLoading = false;
-				// window.localStorage.setItem(String(category), JSON.stringify($scope.articles));
 			});
 		} else{
 			$scope.isLoading = false;
@@ -159,17 +156,6 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	$scope.isLoading = false;
 	$scope.user = fbService.getUser();
 
-	// var promptReload = function(){
-	// 	$mdDialog.show($mdDialog.confirm()
-	// 		.title('Refresh content')
-	// 		.content('You\'ve come back online. Would you like to get the latest articles?')
-	// 		.ok('Yes, please')
-	// 		.cancel('Not now')
-	// 	).then(function(){
-	// 		$route.reload();
-	// 	});
-	// };
-
 	// Update function triggered when app goes back online
 	var onOnline = function(){
 		var tempSummary = bookmarkService.getSummary(function(){
@@ -192,10 +178,8 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				$scope.articles = temp.data;
 				$scope.isLoading = false;
 				storageService.setBookmarksForCategory(category, $scope.articles);
-				// window.localStorage.setItem('bookmark'+category, JSON.stringify($scope.articles));
 			});
 		} else{
-			// $scope.articles = JSON.parse(window.localStorage.getItem('bookmark'+category));
 			$scope.articles = storageServie.getBookmarksForCategory(category);
 			$scope.isLoading = false;
 		}
@@ -214,7 +198,6 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			});
 			lastPage = temp.data.length>0 ? lastPage+1 : lastPage;
 			$scope.isLastPage = temp.data.length===0;
-			// window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
 			storageService.setBookmarksForCategory(currentCategory, $scope.articles);
 			$scope.isLoading = false;
 		});
@@ -228,7 +211,6 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		$scope.bookmarkSummary.total--;
 		$scope.bookmarkSummary.by_categories[categoryMapper.getCategoryId(article.category)]--;
 		$scope.articles.splice(articleIndex, 1);
-		// window.localStorage.setItem('bookmark'+currentCategory, JSON.stringify($scope.articles));
 		storageService.setBookmarksForCategory(currentCategory, $scope.articles);
 		storageService.setBookmarkSummary($scope.bookmarkSummary);
 		jobQueue.addJob(function(){
