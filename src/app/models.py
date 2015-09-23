@@ -69,7 +69,7 @@ class Category(db.Model):
         return cls.query.get(id)
 
     def get_paginated_articles(self, offset, limit):
-        return self.posts[offset:offset + limit]
+        return sorted(self.posts, key=lambda x: x.create_time, reverse=True)[offset:offset + limit]
 
 
 class Post(db.Model):
