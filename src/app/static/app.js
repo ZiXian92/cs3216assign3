@@ -48,7 +48,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 
 	// Updates article list when app goes back online
 	var onOnline = function(){
-		$scope.getArticles(category);
+		// $scope.getArticles(category);
 		var temp = feedService.getArticles(category, 1, function(){
 			if(angular.isArray(temp) && temp.length>0){
 				$scope.articles = temp;
@@ -195,7 +195,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				storageService.setBookmarksForCategory(category, $scope.articles);
 			});
 		} else{
-			$scope.articles = storageServie.getBookmarksForCategory(category);
+			$scope.articles = storageService.getBookmarksForCategory(category);
 			$scope.isLoading = false;
 		}
 	};
