@@ -78,6 +78,9 @@ module.factory('jobQueue', function(){
 
 	var clearUser = function(){
 		$window.localStorage.removeItem('user');
+		for(var i=0; i<7; i++){
+			$window.localStorage.removeItem('bookmark'+String(i));
+		}
 	};
 
 	/*

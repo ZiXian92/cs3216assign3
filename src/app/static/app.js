@@ -165,7 +165,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	// Update function triggered when app goes back online
 	var onOnline = function(){
 		var tempSummary = bookmarkService.getSummary(function(){
-			if(angular.isObject(tempSummary) && tempSummary.keys.length>0){
+			if(angular.isObject(tempSummary) && angular.isArray(tempSummary.keys) && tempSummary.keys.length>0){
 				$scope.bookmarkSummary = tempSummary;
 				storageService.setBookmarkSummary($scope.bookmarkSummary);
 			}
