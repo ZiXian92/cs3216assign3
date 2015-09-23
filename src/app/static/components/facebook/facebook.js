@@ -1,6 +1,6 @@
 var fb = angular.module('facebook', []);
 
-fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
+fb.factory('fbService', ['$window', '$rootScope', 'storageService', function($window, $rootScope){
 	var user = undefined;
 
 	// Initializing Facebook SDK
@@ -22,14 +22,16 @@ fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
 				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
-					$window.localStorage.setItem('user', JSON.stringify(user));
+					storageService.setUser(user);
+					// $window.localStorage.setItem('user', JSON.stringify(user));
 				});
 			}
 		});
 
 		FB.Event.subscribe('auth.logout', function(response){
 			user = undefined;
-			$window.localStorage.removeItem('user');
+			storageService.clearUser();
+			// $window.localStorage.removeItem('user');
 		});
 
 		FB.getLoginStatus(function(response){
@@ -41,26 +43,43 @@ fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
 				user.image = 'http://graph.facebook.com/'+user.id+'/picture?type=square&width=200&height=200';
 				FB.api('/me', function(response){
 					user.name = response.name;
-					$window.localStorage.setItem('user', JSON.stringify(user));
+					storageService.setUser(user);
+					// $window.localStorage.setItem('user', JSON.stringify(user));
 					$rootScope.$apply();
 				});
 			}
 		});
 	};
 
-	(function(d, s, id){
-		var js, fjs = d.getElementsByTagName(s)[0];
-	    if (d.getElementById(id)) {return;}
-	    js = d.createElement(s); js.id = id;
-	    js.src = "//connect.facebook.net/en_US/sdk.js";
-	    fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-	
-	// Method definitions
-	var getUser = function(){
-		return isLoggedIn() ? angular.extend({}, user) : user;
+	var initSdk = function(){
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+		    if (d.getElementById(id)) {return;}
+		    js = d.createElement(s); js.id = id;
+		    js.src = "//connect.facebook.net/en_US/sdk.js";
+		    fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
 	};
 
+	if($window.navigator.onLine){
+		initSdk();
+	} else{
+		$window.addEventListener('online', initSdk);
+		user = storageService.getUser();
+		user = angular.isObject(user) ? user : undefined;
+	}
+	
+	// Method definitions
+	/*
+	 * @return {Object?}
+	 */
+	var getUser = function(){
+		return isLoggedIn() ? angular.extend({}, user) : undefined;
+	};
+
+	/*
+	 * @return {Boolean}
+	 */
 	var isLoggedIn = function(){
 		return angular.isDefined(user);
 	};
@@ -75,6 +94,10 @@ fb.factory('fbService', ['$window', '$rootScope', function($window, $rootScope){
 			}
 		});
 	};
+
+	/*
+	 * @param {function=} callback
+	 */
 	var logout = function(callback){
 		FB.logout(function(response){
 			if(angular.isFunction(callback)){
