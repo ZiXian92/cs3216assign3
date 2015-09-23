@@ -38,7 +38,7 @@
 </div>
 <div layout="row" layout-align="space-around">
     <md-progress-circular md-mode="indeterminate" ng-show="isLoading"></md-progress-circular>
-	<p ng-show="!isLoading">Wow, you have reached the end of this category!</p>
+	<p ng-show="isLastPage && !isLoading">Wow, you have reached the end of this category!</p>
 </div>
 </div>
 <link rel="stylesheet" href="/static/css/feed.css">
