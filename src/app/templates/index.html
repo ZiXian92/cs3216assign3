@@ -7,6 +7,15 @@
     <link rel="apple-touch-icon-precomposed" href="/static/images/logo.png"/>
     <link rel="apple-touch-startup-image" media="screen" href="/static/images/splash.png"/>
     <title>tl;dr</title>
+    <script>
+      window.addEventListener('load', function(){
+        window.applicationCache.addEventListener('updateready', function(){
+          console.log('Updating app');
+          window.applicationCache.swapCache();
+          window.location.reload();
+        });
+      });
+    </script>
 </head>
 <body ng-app="tldr" ng-controller="mainController" md-swipe-right="showMenu()" md-swipe-left="closeMenu()">
 	<div title-bar></div>
