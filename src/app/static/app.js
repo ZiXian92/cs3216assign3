@@ -49,6 +49,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	// Updates article list when app goes back online
 	var onOnline = function(){
 		$scope.getArticles(category);
+		var temp = feedService.getArticles(category, 1, function(){
+			if(angular.isArray(temp) && temp.length>0){
+				$scope.articles = temp;
+				storageService.setArticlesForCategory(String(category), $scope.articles);
+			}
+		});
 	};
 
 	/*
@@ -159,10 +165,19 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	// Update function triggered when app goes back online
 	var onOnline = function(){
 		var tempSummary = bookmarkService.getSummary(function(){
-			$scope.bookmarkSummary = tempSummary;
+			if(angular.isObject(tempSummary) && tempSummary.keys.length>0){
+				$scope.bookmarkSummary = tempSummary;
+				storageService.setBookmarkSummary($scope.bookmarkSummary);
+			}
 		});
 
 		$scope.getBookmarksForCategory(currentCategory);
+		var temp = bookmarkService.getBookmarks(currentCategory, 1, function(){
+			if(angular.isArray(temp.data) && temp.data.length>0){
+				$scope.articles = temp.data;
+				storageService.setBookmarksForCategory(currentCategory, $scope.articles);
+			}
+		});
 	};
 
 	/*
