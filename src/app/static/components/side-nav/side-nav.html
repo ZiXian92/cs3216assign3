@@ -2,7 +2,7 @@
 	<md-menu-content class="sidenav-menu">
 		<md-menu-item ng-if="isLoggedIn()">
 			<md-button ng-click="onMenuSelect('profile', '/profile')" ng-class="{'md-focused': page==='profile'}">
-				<img ng-src="{{user.image}}" class="circle" id="sidenav-profile-image">
+				<img ng-src="{{ user.image }}" class="circle" id="sidenav-profile-image">
 				<b>My Bookmarks</b>
 			</md-button>
 		</md-menu-item>

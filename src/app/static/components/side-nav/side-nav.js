@@ -1,27 +1,27 @@
 var sideNav = angular.module('sideNav', ['ngMaterial', 'ngMdIcons', 'facebook']);
 
-sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbService', function($location, $mdDialog, sidenavService, fbService){
+sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbService', function ($location, $mdDialog, sidenavService, fbService) {
 	return {
 		restrict: 'A',
 		templateUrl: '/static/components/side-nav/side-nav.html',
 		scope: {
 			page: '='
 		},
-		controller: function($scope, $mdDialog, sidenavService, fbService){
+		controller: function ($scope, $mdDialog, sidenavService, fbService) {
 
-			$scope.$watch('page', function(newVal, oldVal, scope){
+			$scope.$watch('page', function (newVal, oldVal, scope) {
 				console.log(newVal);
 			});
-			$scope.$watch(fbService.isLoggedIn, function(newVal, oldVal, scope){
+			$scope.$watch(fbService.isLoggedIn, function (newVal, oldVal, scope) {
 				scope.user = newVal ? fbService.getUser() : undefined;
 			});
 
 			$scope.isLoggedIn = fbService.isLoggedIn;
 
 			// Event Handlers
-			$scope.onClickShare = function(){
-				fbService.share('http://tldr.sshz.org', function(response){
-					if(!angular.isDefined(response)){
+			$scope.onClickShare = function () {
+				fbService.share('http://tldr.sshz.org', function (response) {
+					if (!angular.isDefined(response)) {
 						$mdDialog.show($mdDialog.alert()
 							.clickOutsideToClose(true)
 							.title('Thanks for spreading the word!')
@@ -30,7 +30,7 @@ sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbSer
 				});
 			};
 
-			$scope.onMenuSelect = function(menu, view){
+			$scope.onMenuSelect = function (menu, view) {
 				sidenavService.closeSidenav();
 				$scope.$emit('pageChange', menu);
 				$location.path(view);
@@ -83,13 +83,17 @@ sideNav.directive('sideNav', ['$location', '$mdDialog', 'sidenavService', 'fbSer
 				'icon': 'rate_review'
 			}];
 		},
-		link: function(scope, element, attrs){
+		link: function (scope, element, attrs) {
 
 		}
 	};
-}]).factory('sidenavService', ['$mdSidenav', function($mdSidenav){
+}]).factory('sidenavService', ['$mdSidenav', function ($mdSidenav) {
 	return {
-		openSidenav: function(){ $mdSidenav('side-bar').toggle(); },
-		closeSidenav: function(){ $mdSidenav('side-bar').close(); }
+		openSidenav: function () {
+			$mdSidenav('side-bar').toggle();
+		},
+		closeSidenav: function () {
+			$mdSidenav('side-bar').close();
+		}
 	};
 }]);
