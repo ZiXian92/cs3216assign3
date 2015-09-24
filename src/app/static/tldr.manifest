@@ -11,7 +11,6 @@ CACHE MANIFEST
 /static/components/title-bar/title-bar.js
 /static/components/title-bar/title-bar.css
 /static/components/facebook/facebook.js
-/static/components/facebook/fb-menu.html
 
 # Partials
 /static/partials/about.html
@@ -25,8 +24,6 @@ CACHE MANIFEST
 /static/css/home.css
 /static/css/main.css
 /static/css/materialize.min.css
-# /static/css/material_icon
-# /static/css/2fcrYFNaTjcS6g4U3t-Y5StnKWgpfO2iSkLzTz-AABg.ttf
 
 # JS
 /static/js/materialize.min.js
@@ -34,7 +31,7 @@ CACHE MANIFEST
 
 # Images
 /static/images/logo.png
-/static/images/splash.png
+/static/images/splash750x1294.png
 
 # Node modules
 /static/node_modules/angular-material/angular-material.min.css
