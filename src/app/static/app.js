@@ -305,16 +305,17 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {String} source
 	 * @param {String} id
-	 * @param {function()=} completion
+	 * @param {function()=} success
+	 * @param {function()=} error
 	 */
-	var addBookmark = function(source, id, completion){
+	var addBookmark = function(source, id, success, error){
 		bookmarkApiService.addBookmark({source_id: source, article_id: id}, function(response){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(success)){
+				success();
 			}
 		}, function(){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(error)){
+				error();
 			}
 		})
 	};
@@ -322,36 +323,38 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {String} category
 	 * @param {Number} page
-	 * @param {function()=} completion
+	 * @param {function()=} success
+	 * @param {function()=} error
 	 * @return {{data: Array<Object>}}
 	 */
-	var getBookmarks = function(category, page, completion){
+	var getBookmarks = function(category, page, success, error){
 		return bookmarkApiService.getBookmarks({category: category, page: page}, function(response){
 			response.data.forEach(function(article){
 				article.categoryUrl = '#/feed/'+categoryMapper.getCategoryId(article.category);
 			});
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(success)){
+				success();
 			}
 		}, function(response){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(error)){
+				error();
 			}
 		});
 	};
 
 	/*
-	 * @param {function()=} completion
+	 * @param {function()=} success
+	 * @param {function()=} error
 	 * @return {{by_categories: Object, total: Number}}
 	 */
-	var getBookmarksSummary = function(completion){
+	var getBookmarksSummary = function(success, error){
 		return bookmarkApiService.getSummary({}, function(){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(success)){
+				success();
 			}
 		}, function(){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(error)){
+				error();
 			}
 		});
 	};
@@ -359,16 +362,17 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {String} source
 	 * @param {String} id
-	 * @param {function()=} completion
+	 * @param {function()=} success
+	 * @param {function()=} error
 	 */
-	var removeBookmark = function(source, id, completion){
+	var removeBookmark = function(source, id, success, error){
 		bookmarkApiService.removeBookmark({source_id: source, article_id: id}, function(response){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(success)){
+				success();
 			}
 		}, function(){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(error)){
+				error();
 			}
 		});
 	};
@@ -410,9 +414,10 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {Number} categoryId 0 for all categories
 	 * @param {Number} pageNum Starts from 1
-	 * @param {function()=} completion
+	 * @param {function()=} success
+	 * @param {function()=} error
 	 */
-	var getArticles = function(categoryId, pageNum, completion){
+	var getArticles = function(categoryId, pageNum, success, error){
 		// console.log(categoryId? true: false); // Prints false when 0
 		categoryId = categoryId ? categoryId : 0;
 		pageNum = pageNum ? pageNum : 1;
@@ -420,12 +425,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			articles.forEach(function(article){
 				article.categoryUrl = '#/feed/'+categoryMapper.getCategoryId(article.category);
 			});
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(success)){
+				success();
 			}
 		}, function(){
-			if(angular.isFunction(completion)){
-				completion();
+			if(angular.isFunction(error)){
+				error();
 			}
 		});
 	};

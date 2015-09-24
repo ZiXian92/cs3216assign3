@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v0.4.4
+# v0.4.5
 
 /static/app.js
 
@@ -15,12 +15,14 @@ CACHE MANIFEST
 # Partials
 /static/partials/about.html
 /static/partials/feed.html
+/static/partials/feedback.html
 /static/partials/home.html
 /static/partials/profile.html
 
 # CSS
 /static/css/about.css
 /static/css/feed.css
+/static/css/feedback.css
 /static/css/home.css
 /static/css/main.css
 /static/css/materialize.min.css

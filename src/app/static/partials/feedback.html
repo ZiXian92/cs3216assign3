@@ -13,7 +13,7 @@
 				<textarea ng-model="feedback.comments" columns="3"></textarea>
 			</md-input-container>
 			<md-input-container flex>
-				<md-button class="md-raised md-primary" ng-click="submitFeedback()"
+				<md-button class="md-raised feedback-submit-button white-text" ng-click="submitFeedback()"
 						   ng-disabled="!(feedback.url || feedback.comments)">
 					Submit
 				</md-button>
@@ -21,3 +21,4 @@
 		</form>
 	</md-content>
 </div>
+<link rel="stlesheet" href="/static/css/feedback.css">
