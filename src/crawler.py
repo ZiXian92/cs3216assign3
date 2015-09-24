@@ -14,14 +14,13 @@ def main():
                                image=post['image'],
                                create_time=post['create_time'])
         try:
+            utils.get_cached_post(post['source'], post['id'])
             new_post.insert()
             category = models.Category.get_by_name(post['category'])
             category.posts.append(new_post)
             db.session.commit()
         except IntegrityError:
             pass
-    for post in posts:
-        utils.get_cached_post(post['source'], post['id'])
 
 
 if __name__ == '__main__':
