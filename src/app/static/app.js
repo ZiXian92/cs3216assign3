@@ -171,7 +171,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		window.removeEventListener('online', onOnline);
 	});
 	$scope.getArticles(category);
-}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', 'storageService', function($scope, $location, $route, $mdDialog, bookmarkService, categoryMapper, fbService, jobQueue, storageService){
+}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', '$anchorScroll', '$timeout', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', 'storageService', function($scope, $location, $route, $mdDialog, $anchorScroll, $timeout, bookmarkService, categoryMapper, fbService, jobQueue, storageService){
 	if(!fbService.isLoggedIn()){
 		$location.path('/');
 	}
@@ -252,6 +252,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		jobQueue.addJob(function(){
 			bookmarkService.removeBookmark(article.source, article.article_id);
 		});
+		var nextArticle = $scope.articles[articleIndex];
+		if (nextArticle) {
+			$timeout(function () {
+				$anchorScroll(nextArticle.source + '_' + nextArticle.article_id);
+			});
+		}
 	};
 
 	/*

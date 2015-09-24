@@ -7,7 +7,7 @@
 		<md-tab label="All({{bookmarkSummary.total}})" md-on-select="getBookmarksForCategory('0')"></md-tab>
 		<md-tab ng-repeat="(category, count) in bookmarkSummary.by_categories" label="{{getCategoryNameForId(category)}}({{count}})" md-on-select="getBookmarksForCategory(category)"></md-tab>
 	</md-tabs>
-	<div class="row" ng-repeat="article in articles">
+	<div class="row" ng-repeat="article in articles" id="{{ article.source }}_{{ article.article_id }}">
 		<div class="col s12">
 			<div class="card">
 				<div class="card-image">
