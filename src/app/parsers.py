@@ -350,7 +350,8 @@ class NewserParser(BaseParser):
             'bullets': parse_bullets(),
             'category': cls.map_category([]),
             'id': id,
-            'source': cls.SOURCE_ID
+            'source': cls.SOURCE_ID,
+            'url': url
         }
 
     @classmethod
@@ -380,11 +381,14 @@ class NewserParser(BaseParser):
             for item in items:
                 title = item.find('title').getText().strip()
                 link = item.find('link').getText()
+                time = datetime.strptime(item.find('pubdate').getText().rsplit(' ', 1)[0], '%a, %d %b %Y %H:%M:%S')
                 posts.append({
                     'id': cls.get_pid(link),
                     'title': title,
                     'category': cls.map_category([category]),
-                    'source': cls.SOURCE_ID
+                    'source': cls.SOURCE_ID,
+                    'image': '',
+                    'create_time': time
                 })
 
         return posts
@@ -400,4 +404,4 @@ class NewserParser(BaseParser):
         return 'Others'
 
 
-parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser, MarcAndAngelParser]}
+parsers = {_.SOURCE_ID: _ for _ in [LifeHackParser, MarcAndAngelParser, NewserParser]}
