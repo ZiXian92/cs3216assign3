@@ -20,7 +20,9 @@
 				</p>
 				<ul class="collapsible z-depth-0" data-accordion="true" watch>
 					<li ng-repeat="point in article.bullets" post-repeat="initCollapsible">
-						<div class="collapsible-header">{{point.title}}</div>
+						<div class="collapsible-header">{{point.title}}
+							<span ng-if="point.details.length > 0" class="expand-hint"><ng-md-icon icon="expand_more" style="fill: black" size="20"></ng-md-icon></span>
+						</div>
 						<div class="collapsible-body bullet-details" ng-if="point.details.length > 0"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
 					</li>
 					<li ng-if="article.bullets.length===0">
