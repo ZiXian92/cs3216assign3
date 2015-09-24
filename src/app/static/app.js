@@ -153,10 +153,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		article.bookmarked = false;
 		article.bookmarks -= 1;
 		jobQueue.addJob(function(){
-			bookmarkService.removeBookmark({
-				'article_id': article.article_id,
-				'source_id': article.source
-			});
+			bookmarkService.removeBookmark(article.source, article.article_id);
 		});
 	};
 
