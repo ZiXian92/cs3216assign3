@@ -127,7 +127,14 @@ class BookmarksCount(Resource):
 
 
 class Feedback(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('url')
+    parser.add_argument('comments')
+
     def post(self):
+        args = Feedback.parser.parse_args()
+        feedback = models.Feedback(url=args.get('url', ''), comments=args.get('comments', ''))
+        feedback.insert()
         return 'OK'
 
 

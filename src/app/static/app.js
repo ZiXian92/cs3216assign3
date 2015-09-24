@@ -26,20 +26,22 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	storageUpdateService.update();
 
 }]).controller('feedbackController', ['$scope', '$mdDialog', 'feedbackService', function($scope, $mdDialog, feedbackService) {
-	var emptyFeedback = {
+	$scope.feedback |= {
 		url: '',
 		comments: ''
 	};
-	$scope.feedback |= emptyFeedback;
 	$scope.submitFeedback = function () {
-		feedbackService.submit($scope.feedback, function(response) {
-			$scope.feedback = emptyFeedback;
+		feedbackService.submit($scope.feedback, function (response) {
+			$scope.feedback = {
+				url: '',
+				comments: ''
+			};
 			$mdDialog.show($mdDialog.alert()
 				.clickOutsideToClose(true)
 				.title('Thank you!')
 				.content('Your feedback is noted down.')
 				.ok('Ok'));
-		}, function(reponse) {
+		}, function (reponse) {
 			$mdDialog.show($mdDialog.alert()
 				.clickOutsideToClose(true)
 				.title('Oops')

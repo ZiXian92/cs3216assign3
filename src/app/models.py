@@ -109,3 +109,18 @@ class Post(db.Model):
     @classmethod
     def get_paginated(cls, offset, limit):
         return cls.query.order_by('create_time DESC').limit(limit).offset(offset).all()
+
+
+class Feedback(db.Model):
+    __tablename__ = 'feedbacks'
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String)
+    comments = db.Column(db.String)
+
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            raise
