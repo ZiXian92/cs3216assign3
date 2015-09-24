@@ -66,8 +66,8 @@ class Trending(Resource):
 
 class Bookmarks(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('source_id')
-    parser.add_argument('article_id')
+    parser.add_argument('source_id', required=True)
+    parser.add_argument('article_id', required=True)
 
     def get(self):
         limit = 5
