@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v0.4.3
+# v0.4.4
 
 /static/app.js
 
@@ -31,7 +31,13 @@ CACHE MANIFEST
 
 # Images
 /static/images/logo.png
+/static/images/splash320x460.png
+/static/images/splash640x920.png
+/static/images/splash640x1096.png
 /static/images/splash750x1294.png
+/static/images/splash768x1004.png
+/static/images/splash1242x2148.png
+/static/images/splash1536x2008.png
 
 # Node modules
 /static/node_modules/angular-material/angular-material.min.css
