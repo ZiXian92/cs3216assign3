@@ -67,7 +67,6 @@ fb.factory('fbService', ['$window', '$rootScope', 'storageService', function($wi
 		$window.addEventListener('online', initSdk);
 		user = storageService.getUser();
 		user = angular.isObject(user) ? user : undefined;
-		$rootScope.$apply();
 	}
 	
 	// Method definitions
