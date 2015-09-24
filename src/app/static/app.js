@@ -1,31 +1,31 @@
 var app = angular.module('tldr', ['titleBar', 'sideNav', 'ngRoute', 'ngResource', 'ngMdIcons', 'infinite-scroll', 'ngMaterial', 'facebook', 'uiModel']);
 
-app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'storageUpdateService', function($scope, $location, $window, sidenavService, storageUpdateService){
+app.controller('mainController', ['$scope', '$location', '$window', 'sidenavService', 'storageUpdateService', function ($scope, $location, $window, sidenavService, storageUpdateService) {
 
 	// Methods
 	$scope.closeMenu = sidenavService.closeSidenav;
 	$scope.showMenu = sidenavService.openSidenav;
 
-	$scope.initCollapsible = function(){
+	$scope.initCollapsible = function () {
 		$('.collapsible').collapsible();
 	};
 
 	// Event Handlers
-	$scope.$on('pageChange', function(event, newPage){
+	$scope.$on('pageChange', function (event, newPage) {
 		$scope.page = newPage;
 		console.log($scope.page);
 	});
 
 	// Clears bookmarks when user changes
-	$scope.$on($window.localStorage.getItem('user'), function(newVal, oldVal, scope){
-		for(var i=0; i<7; i++){
-			$window.localStorage.removeItem('bookmark'+i);
+	$scope.$on($window.localStorage.getItem('user'), function (newVal, oldVal, scope) {
+		for (var i = 0; i < 7; i++) {
+			$window.localStorage.removeItem('bookmark' + i);
 		}
 	});
 
 	storageUpdateService.update();
 
-}]).controller('feedbackController', ['$scope', '$mdDialog', 'feedbackService', function($scope, $mdDialog, feedbackService) {
+}]).controller('feedbackController', ['$scope', '$mdDialog', 'feedbackService', function ($scope, $mdDialog, feedbackService) {
 	$scope.feedback |= {
 		url: '',
 		comments: ''
@@ -49,7 +49,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				.ok('Ok'));
 		});
 	}
-}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$route', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', 'storageService', function($scope, $location, $mdDialog, $mdToast, $route, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue, storageService){
+}]).controller('feedController', ['$scope', '$location', '$mdDialog', '$mdToast', '$route', '$routeParams', 'feedService', 'fbService', 'bookmarkService', 'categoryMapper', 'jobQueue', 'storageService', function ($scope, $location, $mdDialog, $mdToast, $route, $routeParams, feedService, fbService, bookmarkService, categoryMapper, jobQueue, storageService) {
 	var category = $routeParams.category;
 	if (category === undefined) {
 		category = 0;
@@ -71,10 +71,10 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	// };
 
 	// Updates article list when app goes back online
-	var onOnline = function(){
+	var onOnline = function () {
 		// $scope.getArticles(category);
-		var temp = feedService.getArticles(category, 1, function(){
-			if(angular.isArray(temp) && temp.length>0){
+		var temp = feedService.getArticles(category, 1, function () {
+			if (angular.isArray(temp) && temp.length > 0) {
 				$scope.articles = temp;
 				storageService.setArticlesForCategory(String(category), $scope.articles);
 			}
@@ -84,10 +84,10 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {Object) article
 	 */
-	$scope.bookmarkArticle = function(article){
+	$scope.bookmarkArticle = function (article) {
 		article.bookmarked = true;
 		article.bookmarks += 1;
-		jobQueue.addJob(function(){
+		jobQueue.addJob(function () {
 			bookmarkService.addBookmark(article.source, article.article_id);
 		});
 	};
@@ -95,36 +95,36 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {Number=} category
 	 */
-	$scope.getArticles = function(category){
+	$scope.getArticles = function (category) {
 		$scope.isLastPage = false;
 		$scope.isLoading = true;
-		if(window.navigator.onLine){
-			$scope.articles = feedService.getArticles(category, 1, function(){
+		if (window.navigator.onLine) {
+			$scope.articles = feedService.getArticles(category, 1, function () {
 				$scope.isLoading = false;
 				storageService.setArticlesForCategory(String(category), $scope.articles);
 			});
-		} else{
+		} else {
 			$scope.articles = storageService.getArticlesForCategory(String(category));
 			$scope.isLoading = false;
 		}
 	};
 
-	$scope.fetchMoreArticles = function(){
-		if($scope.isLoading || $scope.isLastPage){
+	$scope.fetchMoreArticles = function () {
+		if ($scope.isLoading || $scope.isLastPage) {
 			return;
 		}
 		$scope.isLoading = true;
-		if(window.navigator.onLine){
-			var temp = feedService.getArticles(category, lastPage+1, function(){
-				lastPage = temp.length===0? lastPage: lastPage+1;
-				$scope.isLastPage = temp.length===0;
-				temp.forEach(function(article){
+		if (window.navigator.onLine) {
+			var temp = feedService.getArticles(category, lastPage + 1, function () {
+				lastPage = temp.length === 0 ? lastPage : lastPage + 1;
+				$scope.isLastPage = temp.length === 0;
+				temp.forEach(function (article) {
 					$scope.articles.push(article);
 				});
 				storageService.setArticlesForCategory(String(category), $scope.articles);
 				$scope.isLoading = false;
 			});
-		} else{
+		} else {
 			$scope.isLoading = false;
 		}
 	};
@@ -132,8 +132,8 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {Object} article
 	 */
-	$scope.onClickBookmarkForArticle = function(article){
-		if(!fbService.isLoggedIn()){
+	$scope.onClickBookmarkForArticle = function (article) {
+		if (!fbService.isLoggedIn()) {
 			$mdDialog.show($mdDialog.alert()
 				.clickOutsideToClose(true)
 				.title('Not allowed')
@@ -141,9 +141,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				.ok('Ok'));
 			return;
 		}
-		if(!article.bookmarked){
+		if (!article.bookmarked) {
 			$scope.bookmarkArticle(article);
-		} else{
+		} else {
 			$scope.removeBookmark(article);
 		}
 	};
@@ -151,10 +151,10 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {Object} article
 	 */
-	$scope.removeBookmark = function(article){
+	$scope.removeBookmark = function (article) {
 		article.bookmarked = false;
 		article.bookmarks -= 1;
-		jobQueue.addJob(function(){
+		jobQueue.addJob(function () {
 			bookmarkService.removeBookmark(article.source, article.article_id);
 		});
 	};
@@ -162,17 +162,17 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {String} url
 	 */
-	$scope.shareArticle = function(url){
+	$scope.shareArticle = function (url) {
 		fbService.share(url);
 	};
 
 	window.addEventListener('online', onOnline);
-	$scope.$on('$destroy', function(){
+	$scope.$on('$destroy', function () {
 		window.removeEventListener('online', onOnline);
 	});
 	$scope.getArticles(category);
-}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', '$anchorScroll', '$timeout', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', 'storageService', function($scope, $location, $route, $mdDialog, $anchorScroll, $timeout, bookmarkService, categoryMapper, fbService, jobQueue, storageService){
-	if(!fbService.isLoggedIn()){
+}]).controller('profileController', ['$scope', '$location', '$route', '$mdDialog', '$anchorScroll', '$timeout', 'bookmarkService', 'categoryMapper', 'fbService', 'jobQueue', 'storageService', function ($scope, $location, $route, $mdDialog, $anchorScroll, $timeout, bookmarkService, categoryMapper, fbService, jobQueue, storageService) {
+	if (!fbService.isLoggedIn()) {
 		$location.path('/');
 	}
 
@@ -184,17 +184,17 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	$scope.user = fbService.getUser();
 
 	// Update function triggered when app goes back online
-	var onOnline = function(){
-		var tempSummary = bookmarkService.getSummary(function(){
-			if(angular.isObject(tempSummary) && angular.isArray(tempSummary.keys) && tempSummary.keys.length>0){
+	var onOnline = function () {
+		var tempSummary = bookmarkService.getSummary(function () {
+			if (angular.isObject(tempSummary) && angular.isArray(tempSummary.keys) && tempSummary.keys.length > 0) {
 				$scope.bookmarkSummary = tempSummary;
 				storageService.setBookmarkSummary($scope.bookmarkSummary);
 			}
 		});
 
 		$scope.getBookmarksForCategory(currentCategory);
-		var temp = bookmarkService.getBookmarks(currentCategory, 1, function(){
-			if(angular.isArray(temp.data) && temp.data.length>0){
+		var temp = bookmarkService.getBookmarks(currentCategory, 1, function () {
+			if (angular.isArray(temp.data) && temp.data.length > 0) {
 				$scope.articles = temp.data;
 				storageService.setBookmarksForCategory(currentCategory, $scope.articles);
 			}
@@ -204,18 +204,18 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {String} category
 	 */
-	$scope.getBookmarksForCategory = function(category){
+	$scope.getBookmarksForCategory = function (category) {
 		currentCategory = category;
 		lastPage = 1;
 		$scope.isLastPage = false;
 		$scope.isLoading = true;
-		if(window.navigator.onLine){
-			var temp = bookmarkService.getBookmarks(category, 1, function(){
+		if (window.navigator.onLine) {
+			var temp = bookmarkService.getBookmarks(category, 1, function () {
 				$scope.articles = temp.data;
 				$scope.isLoading = false;
 				storageService.setBookmarksForCategory(category, $scope.articles);
 			});
-		} else{
+		} else {
 			$scope.articles = storageService.getBookmarksForCategory(category);
 			$scope.isLoading = false;
 		}
@@ -223,17 +223,17 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 
 	$scope.getCategoryNameForId = categoryMapper.getCategoryNameForId;
 
-	$scope.getMoreBookmarks = function(){
-		if(window.navigator.offLine || $scope.isLoading || $scope.isLastPage){
+	$scope.getMoreBookmarks = function () {
+		if (window.navigator.offLine || $scope.isLoading || $scope.isLastPage) {
 			return;
 		}
 		$scope.isLoading = true;
-		var temp = bookmarkService.getBookmarks(currentCategory, lastPage+1, function(){
-			temp.data.forEach(function(article){
+		var temp = bookmarkService.getBookmarks(currentCategory, lastPage + 1, function () {
+			temp.data.forEach(function (article) {
 				$scope.articles.push(article);
 			});
-			lastPage = temp.data.length>0 ? lastPage+1 : lastPage;
-			$scope.isLastPage = temp.data.length===0;
+			lastPage = temp.data.length > 0 ? lastPage + 1 : lastPage;
+			$scope.isLastPage = temp.data.length === 0;
 			storageService.setBookmarksForCategory(currentCategory, $scope.articles);
 			$scope.isLoading = false;
 		});
@@ -242,14 +242,14 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {Number} articleIndex
 	 */
-	$scope.removeBookmark = function(articleIndex){
+	$scope.removeBookmark = function (articleIndex) {
 		var article = $scope.articles[articleIndex];
 		$scope.bookmarkSummary.total--;
 		$scope.bookmarkSummary.by_categories[categoryMapper.getCategoryId(article.category)]--;
 		$scope.articles.splice(articleIndex, 1);
 		storageService.setBookmarksForCategory(currentCategory, $scope.articles);
 		storageService.setBookmarkSummary($scope.bookmarkSummary);
-		jobQueue.addJob(function(){
+		jobQueue.addJob(function () {
 			bookmarkService.removeBookmark(article.source, article.article_id);
 		});
 		var nextArticle = $scope.articles[articleIndex];
@@ -263,18 +263,18 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	/*
 	 * @param {String} url
 	 */
-	$scope.shareArticle = function(url){
+	$scope.shareArticle = function (url) {
 		fbService.share(url);
 	};
 
 	window.addEventListener('online', onOnline);
-	$scope.$on('$destroy', function(){
+	$scope.$on('$destroy', function () {
 		window.removeEventListener('online', onOnline);
 	});
 	$scope.bookmarkSummary = (window.navigator.onLine ? bookmarkService.getSummary() : storageService.getBookmarkSummary());
 	$scope.getBookmarksForCategory(currentCategory);
 
-}]).factory('articleService', ['$resource', function($resource){
+}]).factory('articleService', ['$resource', function ($resource) {
 	return $resource('', {}, {
 		getAllArticles: {
 			method: 'GET',
@@ -282,7 +282,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			isArray: true
 		}
 	});
-}]).factory('bookmarkApiService', ['$resource', function($resource){
+}]).factory('bookmarkApiService', ['$resource', function ($resource) {
 	return $resource('/api/v1/bookmark', {}, {
 		addBookmark: {
 			method: 'POST'
@@ -299,13 +299,13 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			method: 'DELETE'
 		}
 	});
-}]).factory('feedbackService', ['$resource', function($resource){
+}]).factory('feedbackService', ['$resource', function ($resource) {
 	return $resource('/api/v1/feedback', {}, {
 		submit: {
 			method: 'POST'
 		}
 	});
-}]).factory('bookmarkService', ['bookmarkApiService', 'categoryMapper', function(bookmarkApiService, categoryMapper){
+}]).factory('bookmarkService', ['bookmarkApiService', 'categoryMapper', function (bookmarkApiService, categoryMapper) {
 
 	/*
 	 * @param {String} source
@@ -313,13 +313,13 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	 * @param {function()=} success
 	 * @param {function()=} error
 	 */
-	var addBookmark = function(source, id, success, error){
-		bookmarkApiService.addBookmark({source_id: source, article_id: id}, function(response){
-			if(angular.isFunction(success)){
+	var addBookmark = function (source, id, success, error) {
+		bookmarkApiService.addBookmark({source_id: source, article_id: id}, function (response) {
+			if (angular.isFunction(success)) {
 				success();
 			}
-		}, function(){
-			if(angular.isFunction(error)){
+		}, function () {
+			if (angular.isFunction(error)) {
 				error();
 			}
 		})
@@ -332,16 +332,16 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	 * @param {function()=} error
 	 * @return {{data: Array<Object>}}
 	 */
-	var getBookmarks = function(category, page, success, error){
-		return bookmarkApiService.getBookmarks({category: category, page: page}, function(response){
-			response.data.forEach(function(article){
-				article.categoryUrl = '#/feed/'+categoryMapper.getCategoryId(article.category);
+	var getBookmarks = function (category, page, success, error) {
+		return bookmarkApiService.getBookmarks({category: category, page: page}, function (response) {
+			response.data.forEach(function (article) {
+				article.categoryUrl = '#/feed/' + categoryMapper.getCategoryId(article.category);
 			});
-			if(angular.isFunction(success)){
+			if (angular.isFunction(success)) {
 				success();
 			}
-		}, function(response){
-			if(angular.isFunction(error)){
+		}, function (response) {
+			if (angular.isFunction(error)) {
 				error();
 			}
 		});
@@ -352,13 +352,13 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	 * @param {function()=} error
 	 * @return {{by_categories: Object, total: Number}}
 	 */
-	var getBookmarksSummary = function(success, error){
-		return bookmarkApiService.getSummary({}, function(){
-			if(angular.isFunction(success)){
+	var getBookmarksSummary = function (success, error) {
+		return bookmarkApiService.getSummary({}, function () {
+			if (angular.isFunction(success)) {
 				success();
 			}
-		}, function(){
-			if(angular.isFunction(error)){
+		}, function () {
+			if (angular.isFunction(error)) {
 				error();
 			}
 		});
@@ -370,13 +370,13 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	 * @param {function()=} success
 	 * @param {function()=} error
 	 */
-	var removeBookmark = function(source, id, success, error){
-		bookmarkApiService.removeBookmark({source_id: source, article_id: id}, function(response){
-			if(angular.isFunction(success)){
+	var removeBookmark = function (source, id, success, error) {
+		bookmarkApiService.removeBookmark({source_id: source, article_id: id}, function (response) {
+			if (angular.isFunction(success)) {
 				success();
 			}
-		}, function(){
-			if(angular.isFunction(error)){
+		}, function () {
+			if (angular.isFunction(error)) {
 				error();
 			}
 		});
@@ -388,10 +388,10 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		getSummary: getBookmarksSummary,
 		removeBookmark: removeBookmark
 	};
-}]).factory('categoryMapper', function(){
+}]).factory('categoryMapper', function () {
 	return {
-		getCategoryId: function(category){
-			switch(category){
+		getCategoryId: function (category) {
+			switch (category) {
 				case 'Self-help': return '1';
 				case 'Money': return '2';
 				case 'Technology': return '3';
@@ -401,9 +401,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 				default: return '0';
 			}
 		},
-		getCategoryNameForId: function(categoryId){
+		getCategoryNameForId: function (categoryId) {
 			categoryId = Number(categoryId);
-			switch(categoryId){
+			switch (categoryId) {
 				case 0: return 'All';
 				case 1: return 'Self-help';
 				case 2: return 'Money';
@@ -414,7 +414,7 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 			}
 		}
 	};
-}).factory('feedService', ['articleService', 'categoryMapper', function(articleService, categoryMapper){
+}).factory('feedService', ['articleService', 'categoryMapper', function (articleService, categoryMapper) {
 
 	/*
 	 * @param {Number} categoryId 0 for all categories
@@ -422,19 +422,19 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	 * @param {function()=} success
 	 * @param {function()=} error
 	 */
-	var getArticles = function(categoryId, pageNum, success, error){
+	var getArticles = function (categoryId, pageNum, success, error) {
 		// console.log(categoryId? true: false); // Prints false when 0
 		categoryId = categoryId ? categoryId : 0;
 		pageNum = pageNum ? pageNum : 1;
-		return articleService.getAllArticles({category: categoryId, page: pageNum}, function(articles){
-			articles.forEach(function(article){
-				article.categoryUrl = '#/feed/'+categoryMapper.getCategoryId(article.category);
+		return articleService.getAllArticles({category: categoryId, page: pageNum}, function (articles) {
+			articles.forEach(function (article) {
+				article.categoryUrl = '#/feed/' + categoryMapper.getCategoryId(article.category);
 			});
-			if(angular.isFunction(success)){
+			if (angular.isFunction(success)) {
 				success();
 			}
-		}, function(){
-			if(angular.isFunction(error)){
+		}, function () {
+			if (angular.isFunction(error)) {
 				error();
 			}
 		});
@@ -442,27 +442,27 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	return {
 		getArticles: getArticles
 	};
-}]).factory('storageUpdateService', ['bookmarkService', 'feedService', 'jobQueue', 'storageService', function(bookmarkService, feedService, jobQueue, storageService){
+}]).factory('storageUpdateService', ['bookmarkService', 'feedService', 'jobQueue', 'storageService', function (bookmarkService, feedService, jobQueue, storageService) {
 	var categories = ['0', '1', '2', '3', '5', '6', 'popular'];
 	var bookmarkCategories = ['0'];
 
-	var update = function(){
-		categories.forEach(function(category){
-			jobQueue.addJob(function(){
-				var articles = feedService.getArticles(category, 1, function(){
-					if(!storageService.isUpdatedCategory(category)){
+	var update = function () {
+		categories.forEach(function (category) {
+			jobQueue.addJob(function () {
+				var articles = feedService.getArticles(category, 1, function () {
+					if (!storageService.isUpdatedCategory(category)) {
 						storageService.setArticlesForCategory(category, articles);
 					}
 				});
-				var bookmarks = bookmarkService.getBookmarks(category, 1, function(){
-					if(!storageService.isUpdatedBookmarkCategory(category)){
+				var bookmarks = bookmarkService.getBookmarks(category, 1, function () {
+					if (!storageService.isUpdatedBookmarkCategory(category)) {
 						storageService.setBookmarksForCategory(category, bookmarks.data);
 					}
 				});
 			});
 		});
-		jobQueue.addJob(function(){
-			var summary = bookmarkService.getSummary(function(){
+		jobQueue.addJob(function () {
+			var summary = bookmarkService.getSummary(function () {
 				storageService.setBookmarkSummary(summary);
 			});
 		});
@@ -471,15 +471,15 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	return {
 		update: update
 	};
-}]).directive('postRepeat', function(){
-	return function(scope, element, attrs){
-		scope.$watch(attrs.postRepeat, function(callback){
-			if(scope.$last){
+}]).directive('postRepeat', function () {
+	return function (scope, element, attrs) {
+		scope.$watch(attrs.postRepeat, function (callback) {
+			if (scope.$last) {
 				eval(callback)();
 			}
 		});
 	};
-}).config(['$routeProvider', function($routeProvider){
+}).config(['$routeProvider', function ($routeProvider) {
 	$routeProvider.when('/', {
 		templateUrl: '/static/partials/home.html'
 	}).when('/about', {
