@@ -15,6 +15,14 @@ def prepare_article(post):
     article_dict = utils.get_cached_post(article_id['source'], article_id['article_id'])
     article_dict.update(post.to_dict())
     article_dict['bookmarked'] = bool(g.user and post in g.user.bookmark_articles)
+    for bullet in article_dict['bullets']:
+        if not bullet['details']:
+            for position in range(1, len(bullet['title']) - 5):
+                if bullet['title'][position] in '.!?' and bullet['title'][position - 1] not in '0123456789':
+                    bullet['title'], bullet['details'] = bullet['title'][:position + 1].strip(), \
+                                                         [bullet['title'][position + 1:].strip()]
+                    break
+        bullet['details'] = [_ for _ in bullet['details'] if _]
     return article_dict
 
 
