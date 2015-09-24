@@ -1,6 +1,6 @@
 var module = angular.module('uiModel', []);
 
-module.factory('jobQueue', function(){
+module.factory('jobQueue', function () {
 	var q1 = [];
 	var q2 = [];
 	var interval = 100;	// Number of milliseconds between execution of consecutive jobs
@@ -10,35 +10,35 @@ module.factory('jobQueue', function(){
 	/*
 	 * @param {function()} job
 	 */
-	var enqueueJob = function(job){
+	var enqueueJob = function (job) {
 		q1.push(job);
 	};
 
 	/*
 	 * @return {function()?} The next job to process in the queue or undefined if queue is empty.
 	 */
-	var dequeueJob = function(){
-		if(q2.length===0){
-			while(q1.length>0){
+	var dequeueJob = function () {
+		if (q2.length === 0) {
+			while (q1.length > 0) {
 				q2.push(q1.pop());
 			}
 		}
 		return q2.pop();
 	};
 
-	var halt = function(){
+	var halt = function () {
 		console.log('Halting jobs');
-		if(angular.isNumber(timer)){
+		if (angular.isNumber(timer)) {
 			clearInterval(timer);
 			timer = undefined;
 		}
 	};
 
-	var processJobs = function(){
+	var processJobs = function () {
 		console.log('Resuming jobs');
-		timer = setInterval(function(){
+		timer = setInterval(function () {
 			var job = dequeueJob();
-			if(angular.isFunction(job)){
+			if (angular.isFunction(job)) {
 				job();
 			}
 		}, interval);
@@ -48,7 +48,7 @@ module.factory('jobQueue', function(){
 	window.addEventListener('offline', halt);
 	window.addEventListener('online', processJobs);
 
-	if(window.navigator.onLine && !isRunning){
+	if (window.navigator.onLine && !isRunning) {
 		console.log('Starting jobs');
 		processJobs();
 	}
@@ -56,7 +56,7 @@ module.factory('jobQueue', function(){
 	return {
 		addJob: enqueueJob
 	};
-}).factory('storageService', ['$window', function($window){
+}).factory('storageService', ['$window', function ($window) {
 
 	var updated = {
 		'0': false,
@@ -76,10 +76,10 @@ module.factory('jobQueue', function(){
 		'bookmark6': false
 	};
 
-	var clearUser = function(){
+	var clearUser = function () {
 		$window.localStorage.removeItem('user');
-		for(var i=0; i<7; i++){
-			$window.localStorage.removeItem('bookmark'+String(i));
+		for (var i = 0; i < 7; i++) {
+			$window.localStorage.removeItem('bookmark' + String(i));
 		}
 	};
 
@@ -87,7 +87,7 @@ module.factory('jobQueue', function(){
 	 * @param {String} category
 	 * @return {Object?}
 	 */
-	var getArticlesForCategory = function(category){
+	var getArticlesForCategory = function (category) {
 		return JSON.parse($window.localStorage.getItem(category));
 	};
 
@@ -95,35 +95,35 @@ module.factory('jobQueue', function(){
 	 * @param {String} category
 	 * @return {Object?}
 	 */
-	var getBookmarksForCategory = function(category){
-		return JSON.parse($window.localStorage.getItem('bookmark'+category));
+	var getBookmarksForCategory = function (category) {
+		return JSON.parse($window.localStorage.getItem('bookmark' + category));
 	};
 
 	/*
 	 * @return {Object?}
 	 */
-	var getBookmarkSummary = function(){
+	var getBookmarkSummary = function () {
 		return $window.localStorage.getItem('bookmarkSummary');
 	};
 
 	/*
 	 * @return {Object?}
 	 */
-	var getUser = function(){
+	var getUser = function () {
 		return JSON.parse($window.localStorage.getItem('user'));
 	};
 
 	/*
 	 * @param {String} category
 	 */
-	var isUpdatedBookmarkCategory = function(category){
-		return updated['bookmark'+category];
+	var isUpdatedBookmarkCategory = function (category) {
+		return updated['bookmark' + category];
 	};
 
 	/*
 	 * @param {String} category
 	 */
-	var isUpdatedCategory = function(category){
+	var isUpdatedCategory = function (category) {
 		return updated[category];
 	};
 
@@ -131,7 +131,7 @@ module.factory('jobQueue', function(){
 	 * @param {String} category
 	 * @param {Array<Object>} articles
 	 */
-	var setArticlesForCategory = function(category, articles){
+	var setArticlesForCategory = function (category, articles) {
 		$window.localStorage.setItem(category, JSON.stringify(articles));
 		updated[category] = true;
 	};
@@ -140,14 +140,14 @@ module.factory('jobQueue', function(){
 	 * @param {String} category
 	 * @param {Array<Object>} bookmarks
 	 */
-	var setBookmarksForCategory = function(category, bookmarks){
-		$window.localStorage.setItem('bookmark'+category, JSON.stringify(bookmarks));
+	var setBookmarksForCategory = function (category, bookmarks) {
+		$window.localStorage.setItem('bookmark' + category, JSON.stringify(bookmarks));
 		updated['bookmark+category'] = true;
 	};
 
 	/*
 	 * @param {Object} summary*/
-	var setBookmarkSummary = function(summary){
+	var setBookmarkSummary = function (summary) {
 		$window.localStorage.setItem('bookmarkSummary', JSON.stringify(summary));
 	};
 
@@ -159,7 +159,7 @@ module.factory('jobQueue', function(){
 					token: String
 				}} user
 	 */
-	var setUser = function(user){
+	var setUser = function (user) {
 		$window.localStorage.setItem('user', JSON.stringify(user));
 	};
 
