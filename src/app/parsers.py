@@ -339,7 +339,7 @@ class NewserParser(BaseParser):
                     text = text[index + 2:]
                 for i in range(0, len(text)):
                     if text[i] in '.!?':
-                        bullets.append({'title': text[:i + 1], 'details': text[i + 1:]})
+                        bullets.append({'title': text[:i + 1], 'details': [text[i + 1:]]})
                         break
             return bullets
 
