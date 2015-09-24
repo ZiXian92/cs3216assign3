@@ -102,7 +102,8 @@ class Post(db.Model):
     @classmethod
     def get_trending(cls, days, offset, limit):
         return sorted(filter(lambda x: len(x.bookmarks),
-                             cls.query.filter(cls.create_time > (datetime.utcnow() - timedelta(days=days))).all()),
+                             cls.query.filter(cls.create_time > (datetime.utcnow() - timedelta(days=days))).
+                             order_by('create_time DESC').all()),
                       key=lambda x: len(x.bookmarks), reverse=True)[offset: offset + limit]
 
     @classmethod
