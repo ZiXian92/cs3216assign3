@@ -1,31 +1,39 @@
-<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-disabled="isLoading || isLastPage" infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
+<div class="container" infinite-scroll="fetchMoreArticles()" infinite-scroll-disabled="isLoading || isLastPage"
+	 infinite-scroll-immediate-check="false" infinite-scroll-container='".main-content-container"'>
 <div class="row" ng-repeat="article in articles">
 	<div class="col s12">
 		<div class="card">
 			<div class="card-image">
-				<img ng-src="{{article.image}}">
+				<img ng-src="{{ article.image }}">
 			</div>
-			<a ng-href="{{article.url}}" class="black-text" target="_blank"><h5 class="article-title">{{article.title}}</h5></a>
+			<a ng-href="{{ article.url }}" class="black-text" target="_blank">
+				<h5 class="article-title">{{ article.title }}</h5>
+			</a>
+
 			<p class="flow-text article-desc">
-				Category: <a ng-href="{{article.categoryUrl}}">{{article.category}}</a><br>
-				Source: <a ng-href="{{article.url}}" target="_blank">{{article.source}}</a>
+				Category: <a ng-href="{{ article.categoryUrl }}">{{ article.category }}</a><br>
+				Source: <a ng-href="{{ article.url }}" target="_blank">{{ article.source }}</a>
 			</p>
 			<ul class="collapsible z-depth-0" data-accordion="true" watch>
 				<li ng-repeat="point in article.bullets" post-repeat="initCollapsible">
-					<div class="collapsible-header">{{point.title}}
-						<span ng-if="point.details.length > 0" class="expand-hint"><ng-md-icon icon="expand_more" style="fill: black" size="20"></ng-md-icon></span>
+					<div class="collapsible-header">{{ point.title }}
+					<span ng-if="point.details.length > 0" class="expand-hint">
+						<ng-md-icon icon="expand_more" style="fill: black" size="20"></ng-md-icon>
+					</span>
 					</div>
-					<div class="collapsible-body bullet-details" ng-if="point.details.length > 0"><p ng-repeat="para in point.details track by $index">{{para}}</p></div>
+					<div class="collapsible-body bullet-details" ng-if="point.details.length > 0">
+						<p ng-repeat="para in point.details track by $index">{{ para }}</p>
+					</div>
 				</li>
-				<li ng-if="article.bullets.length===0">
-					<p class="article-desc">{{article.headlines[0]}}</p>
+				<li ng-if="article.bullets.length === 0">
+					<p class="article-desc">{{ article.headlines[0] }}</p>
 				</li>
 			</ul>
 			<div layout="row" layout-align="center">
 				<md-button flex class="article-action-button" ng-click="onClickBookmarkForArticle(article)">
 					<md-icon>
-						<ng-md-icon icon="{{ article.bookmarked ? 'bookmark' : 'bookmark_outline'}}" style="fill: black"
-									size="24"></ng-md-icon>
+						<ng-md-icon icon="{{ article.bookmarked ? 'bookmark' : 'bookmark_outline'}}"
+									style="fill: black" size="24"></ng-md-icon>
 					</md-icon>
 					<span style="position: absolute">+{{ article.bookmarks }}</span>
 				</md-button>
@@ -39,7 +47,7 @@
 	</div>
 </div>
 <div layout="row" layout-align="space-around">
-    <md-progress-circular md-mode="indeterminate" ng-show="isLoading"></md-progress-circular>
+	<md-progress-circular md-mode="indeterminate" ng-show="isLoading"></md-progress-circular>
 	<p ng-show="isLastPage && !isLoading">Wow, you have reached the end of this category!</p>
 </div>
 </div>
