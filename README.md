@@ -7,5 +7,5 @@
 | ---------- | ---- | ------------- |
 | A0119416H | Huang Yue | Server-side development, UI fixes |
 | <matric no> | Nguyen Tan Sy Nguyen | Crawler and content parsing |
-| A0102147W | Gan mei Lan | UI design and wireframes, Logo and splash screen design, UI and UX critique |
+| A0102147W | Gan Mei Lan | UI design and wireframes, Logo and splash screen design, UI and UX critique |
 | A0110781N | Qua Zi Xian | Front-end developer |
