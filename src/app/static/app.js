@@ -59,26 +59,9 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	var lastPage = 1;
 	$scope.isLastPage = false;
 
-	// var promptReload = function(){
-	// 	$mdDialog.show($mdDialog.confirm()
-	// 		.title('Refresh content')
-	// 		.content('You\'ve come back online. Would you like to get the latest articles?')
-	// 		.ok('Yes, please')
-	// 		.cancel('Not now')
-	// 	).then(function(){
-	// 		$route.reload();
-	// 	});
-	// };
-
 	// Updates article list when app goes back online
 	var onOnline = function () {
-		// $scope.getArticles(category);
-		var temp = feedService.getArticles(category, 1, function () {
-			if (angular.isArray(temp) && temp.length > 0) {
-				$scope.articles = temp;
-				storageService.setArticlesForCategory(String(category), $scope.articles);
-			}
-		});
+		$scope.getArticles(category);
 	};
 
 	/*
@@ -96,10 +79,12 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 	 * @param {Number=} category
 	 */
 	$scope.getArticles = function (category) {
+		lastPage = 1;
 		$scope.isLastPage = false;
 		$scope.isLoading = true;
 		if (window.navigator.onLine) {
-			$scope.articles = feedService.getArticles(category, 1, function () {
+			var temp = feedService.getArticles(category, 1, function () {
+				$scope.articles = temp;
 				$scope.isLoading = false;
 				storageService.setArticlesForCategory(String(category), $scope.articles);
 			});
@@ -193,12 +178,6 @@ app.controller('mainController', ['$scope', '$location', '$window', 'sidenavServ
 		});
 
 		$scope.getBookmarksForCategory(currentCategory);
-		var temp = bookmarkService.getBookmarks(currentCategory, 1, function () {
-			if (angular.isArray(temp.data) && temp.data.length > 0) {
-				$scope.articles = temp.data;
-				storageService.setBookmarksForCategory(currentCategory, $scope.articles);
-			}
-		});
 	};
 
 	/*
