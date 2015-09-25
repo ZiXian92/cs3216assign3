@@ -103,7 +103,7 @@ module.factory('jobQueue', function () {
 	 * @return {Object?}
 	 */
 	var getBookmarkSummary = function () {
-		return $window.localStorage.getItem('bookmarkSummary');
+		return JSON.parse($window.localStorage.getItem('bookmarkSummary'));
 	};
 
 	/*
