@@ -13,7 +13,10 @@ def prepare_article(post):
         abort(404)
     article_id = post.get_id()
     article_dict = utils.get_cached_post(article_id['source'], article_id['article_id'])
+    image_url = article_dict['image']
     article_dict.update(post.to_dict())
+    if image_url:
+        article_dict['image'] = image_url
     article_dict['bookmarked'] = bool(g.user and post in g.user.bookmark_articles)
     for bullet in article_dict['bullets']:
         if not bullet['details']:
